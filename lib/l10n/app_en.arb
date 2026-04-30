@@ -1,0 +1,109 @@
+{
+  "@@locale": "en",
+  "appName": "Area & Plot",
+  "@appName": { "description": "Application name" },
+
+  "home": "Home",
+  "calculator": "Calculator",
+  "map": "Map",
+  "converter": "Converter",
+  "history": "History",
+
+  "areaCalculator": "Area Calculator",
+  "mapCalculator": "Map Calculator",
+  "unitConverter": "Unit Converter",
+  "calculationHistory": "Calculation History",
+
+  "rectangle": "Rectangle",
+  "triangle": "Triangle",
+  "polygon": "Polygon",
+
+  "width": "Width",
+  "height": "Height",
+  "base": "Base",
+  "length": "Length",
+  "vertices": "Vertices",
+  "addVertex": "Add Vertex",
+  "removeVertex": "Remove",
+  "xCoordinate": "X",
+  "yCoordinate": "Y",
+
+  "calculate": "Calculate",
+  "reset": "Reset",
+  "save": "Save",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "done": "Done",
+  "undo": "Undo",
+  "clear": "Clear All",
+
+  "result": "Result",
+  "area": "Area",
+  "unit": "Unit",
+  "selectUnit": "Select Unit",
+
+  "squareFeet": "Square Feet",
+  "decimal": "Decimal",
+  "katha": "Katha",
+  "bigha": "Bigha",
+  "acre": "Acre",
+
+  "squareFeetShort": "ft²",
+  "decimalShort": "dec",
+  "kathaShort": "katha",
+  "bighaShort": "bigha",
+  "acreShort": "acre",
+
+  "convertFrom": "From",
+  "convertTo": "To",
+  "enterValue": "Enter value",
+  "conversionResult": "Conversion Result",
+  "allConversions": "All Conversions",
+
+  "tapToAddPoints": "Tap on map to add points",
+  "addAtLeastThreePoints": "Add at least 3 points to calculate area",
+  "pointsAdded": "{count} points added",
+  "@pointsAdded": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "calculateFromMap": "Calculate Area",
+  "clearPoints": "Clear Points",
+  "undoLastPoint": "Undo Last",
+  "saveToHistory": "Save to History",
+
+  "noHistory": "No saved calculations yet",
+  "noHistorySubtitle": "Your calculations will appear here",
+  "favorites": "Favorites",
+  "allHistory": "All",
+  "savedOn": "Saved on {date}",
+  "@savedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "deleteConfirmTitle": "Delete Entry",
+  "deleteConfirmMessage": "Are you sure you want to delete this entry?",
+
+  "featureAreaCalculator": "Area Calculator",
+  "featureAreaCalculatorDesc": "Calculate area of any shape",
+  "featureMapCalculator": "Map Calculator",
+  "featureMapCalculatorDesc": "Draw on map to measure land",
+  "featureUnitConverter": "Unit Converter",
+  "featureUnitConverterDesc": "Convert between land units",
+  "featureHistory": "History",
+  "featureHistoryDesc": "View saved calculations",
+
+  "errorInvalidInput": "Please enter valid numbers",
+  "errorMinVertices": "Polygon needs at least 3 vertices",
+  "errorSaveFailed": "Failed to save calculation",
+  "permissionDenied": "Location permission is required for map features",
+
+  "bangladeshUnits": "Bangladesh Standard",
+  "kathaInfo": "1 Katha = 720 sq ft",
+  "bighaInfo": "1 Bigha = 20 Katha = 14,400 sq ft",
+  "decimalInfo": "1 Decimal = 435.56 sq ft",
+  "acreInfo": "1 Acre = 43,560 sq ft"
+}

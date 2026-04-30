@@ -1,0 +1,107 @@
+{
+  "@@locale": "bn",
+  "appName": "জমির হিসাব",
+  "home": "হোম",
+  "calculator": "ক্যালকুলেটর",
+  "map": "মানচিত্র",
+  "converter": "রূপান্তর",
+  "history": "ইতিহাস",
+
+  "areaCalculator": "ক্ষেত্রফল হিসাবক",
+  "mapCalculator": "মানচিত্র হিসাবক",
+  "unitConverter": "একক রূপান্তরকারী",
+  "calculationHistory": "হিসাবের ইতিহাস",
+
+  "rectangle": "আয়তক্ষেত্র",
+  "triangle": "ত্রিভুজ",
+  "polygon": "বহুভুজ",
+
+  "width": "প্রস্থ",
+  "height": "উচ্চতা",
+  "base": "ভূমি",
+  "length": "দৈর্ঘ্য",
+  "vertices": "শীর্ষবিন্দু",
+  "addVertex": "বিন্দু যোগ করুন",
+  "removeVertex": "মুছুন",
+  "xCoordinate": "X",
+  "yCoordinate": "Y",
+
+  "calculate": "হিসাব করুন",
+  "reset": "পুনরায় শুরু",
+  "save": "সংরক্ষণ",
+  "delete": "মুছুন",
+  "cancel": "বাতিল",
+  "confirm": "নিশ্চিত করুন",
+  "done": "সম্পন্ন",
+  "undo": "পূর্বাবস্থা",
+  "clear": "সব মুছুন",
+
+  "result": "ফলাফল",
+  "area": "এলাকা",
+  "unit": "একক",
+  "selectUnit": "একক নির্বাচন করুন",
+
+  "squareFeet": "বর্গফুট",
+  "decimal": "ডেসিমাল",
+  "katha": "কাঠা",
+  "bigha": "বিঘা",
+  "acre": "একর",
+
+  "squareFeetShort": "ব.ফু.",
+  "decimalShort": "ডেসি",
+  "kathaShort": "কাঠা",
+  "bighaShort": "বিঘা",
+  "acreShort": "একর",
+
+  "convertFrom": "থেকে",
+  "convertTo": "তে",
+  "enterValue": "মান লিখুন",
+  "conversionResult": "রূপান্তরের ফলাফল",
+  "allConversions": "সব রূপান্তর",
+
+  "tapToAddPoints": "বিন্দু যোগ করতে মানচিত্রে ট্যাপ করুন",
+  "addAtLeastThreePoints": "ক্ষেত্রফল গণনার জন্য কমপক্ষে ৩টি বিন্দু যোগ করুন",
+  "pointsAdded": "{count}টি বিন্দু যোগ হয়েছে",
+  "@pointsAdded": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "calculateFromMap": "ক্ষেত্রফল গণনা করুন",
+  "clearPoints": "বিন্দু মুছুন",
+  "undoLastPoint": "শেষটি বাদ দিন",
+  "saveToHistory": "ইতিহাসে সংরক্ষণ",
+
+  "noHistory": "কোনো সংরক্ষিত হিসাব নেই",
+  "noHistorySubtitle": "আপনার হিসাব এখানে দেখাবে",
+  "favorites": "প্রিয়",
+  "allHistory": "সব",
+  "savedOn": "{date} তারিখে সংরক্ষিত",
+  "@savedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "deleteConfirmTitle": "মুছে ফেলুন",
+  "deleteConfirmMessage": "এই হিসাবটি মুছে ফেলতে চান?",
+
+  "featureAreaCalculator": "ক্ষেত্রফল হিসাবক",
+  "featureAreaCalculatorDesc": "যেকোনো আকৃতির ক্ষেত্রফল",
+  "featureMapCalculator": "মানচিত্র হিসাবক",
+  "featureMapCalculatorDesc": "মানচিত্রে এঁকে জমি মাপুন",
+  "featureUnitConverter": "একক রূপান্তরকারী",
+  "featureUnitConverterDesc": "জমির একক পরিবর্তন করুন",
+  "featureHistory": "ইতিহাস",
+  "featureHistoryDesc": "সংরক্ষিত হিসাব দেখুন",
+
+  "errorInvalidInput": "সঠিক সংখ্যা লিখুন",
+  "errorMinVertices": "বহুভুজের জন্য কমপক্ষে ৩টি বিন্দু প্রয়োজন",
+  "errorSaveFailed": "হিসাব সংরক্ষণ ব্যর্থ হয়েছে",
+  "permissionDenied": "মানচিত্র ব্যবহারের জন্য অবস্থান অনুমতি প্রয়োজন",
+
+  "bangladeshUnits": "বাংলাদেশ মান",
+  "kathaInfo": "১ কাঠা = ৭২০ বর্গফুট",
+  "bighaInfo": "১ বিঘা = ২০ কাঠা = ১৪,৪০০ বর্গফুট",
+  "decimalInfo": "১ ডেসিমাল = ৪৩৫.৫৬ বর্গফুট",
+  "acreInfo": "১ একর = ৪৩,৫৬০ বর্গফুট"
+}

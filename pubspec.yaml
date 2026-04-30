@@ -1,0 +1,58 @@
+name: area_and_plot
+description: "Bangladesh Land Area Calculator with Map Integration"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: any
+  riverpod_annotation: any
+
+  # Navigation
+  go_router: any
+
+  # Code Generation Annotations
+  freezed_annotation: any
+  json_annotation: any
+
+  # Offline Database
+  path_provider: any
+
+  # Maps
+  mapbox_maps_flutter: ^2.2.1
+
+  # Permissions
+  permission_handler: any
+
+  # Utilities
+  cupertino_icons: any
+  intl: any
+  uuid: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+
+  # Code Generation
+  build_runner: any
+  riverpod_generator: any
+  freezed: any
+  json_serializable: any
+  isar_generator: 3.1.0+1
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/images/
