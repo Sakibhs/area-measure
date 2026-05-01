@@ -105,5 +105,31 @@
   "kathaInfo": "1 Katha = 720 sq ft",
   "bighaInfo": "1 Bigha = 20 Katha = 14,400 sq ft",
   "decimalInfo": "1 Decimal = 435.56 sq ft",
-  "acreInfo": "1 Acre = 43,560 sq ft"
+  "acreInfo": "1 Acre = 43,560 sq ft",
+
+  "language": "Language",
+  "english": "English",
+  "bengali": "Bengali",
+  "welcome": "Welcome!",
+  "welcomeSubtitle": "Land measurement app made for Bangladesh",
+  "features": "Features",
+  "unitsInfo": "Unit Information",
+  "close": "Close",
+  "allUnits": "All Units",
+  "saving": "Saving...",
+  "error": "Error",
+  "selectUnitLabel": "Select Unit",
+  "from": "From",
+  "to": "To",
+  "allConversionsLabel": "All Conversions",
+  "mapSource": "Map",
+
+  "selectShape": "Select Shape",
+  "verticesLabel": "Vertices ({count})",
+  "@verticesLabel": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "result": "Result",
+  "saveResult": "Save to History",
+  "allUnitsLabel": "All Units"
 }

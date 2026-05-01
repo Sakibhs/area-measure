@@ -19,6 +19,8 @@ enum AreaShape {
     }
   }
 
+  String label(String locale) => locale == 'bn' ? labelBn : labelEn;
+
   String get labelBn {
     switch (this) {
       case rectangle:

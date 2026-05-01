@@ -1,6 +1,7 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
 import 'package:area_and_plot/core/utils/number_formatter.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class MapBottomPanel extends StatelessWidget {
@@ -16,6 +17,7 @@ class MapBottomPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context);
     return Container(
       decoration: BoxDecoration(
         color: colorScheme.surface,
@@ -42,10 +44,10 @@ class MapBottomPanel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('ক্ষেত্রফল',
+                      Text(l.area,
                           style: Theme.of(context).textTheme.labelMedium),
                       Text(
-                        '${NumberFormatter.format(notifier.displayValue)} ${state.displayUnit.labelBn}',
+                        '${NumberFormatter.format(notifier.displayValue)} ${state.displayUnit.label(l.localeName)}',
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall
@@ -62,7 +64,7 @@ class MapBottomPanel extends StatelessWidget {
                   underline: const SizedBox.shrink(),
                   items: AreaUnit.values
                       .map((u) => DropdownMenuItem(
-                          value: u, child: Text(u.labelBn)))
+                          value: u, child: Text(u.label(l.localeName))))
                       .toList(),
                   onChanged: (u) {
                     if (u != null) notifier.setDisplayUnit(u);
@@ -80,12 +82,11 @@ class MapBottomPanel extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save_outlined),
-              label: Text(
-                  state.isSaving ? 'সংরক্ষণ হচ্ছে...' : 'ইতিহাসে সংরক্ষণ'),
+              label: Text(state.isSaving ? l.saving : l.saveToHistory),
             ),
           ] else
             Text(
-              'ক্ষেত্রফল গণনার জন্য কমপক্ষে ৩টি বিন্দু যোগ করুন',
+              l.addAtLeastThreePoints,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),

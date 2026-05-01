@@ -103,5 +103,31 @@
   "kathaInfo": "১ কাঠা = ৭২০ বর্গফুট",
   "bighaInfo": "১ বিঘা = ২০ কাঠা = ১৪,৪০০ বর্গফুট",
   "decimalInfo": "১ ডেসিমাল = ৪৩৫.৫৬ বর্গফুট",
-  "acreInfo": "১ একর = ৪৩,৫৬০ বর্গফুট"
+  "acreInfo": "১ একর = ৪৩,৫৬০ বর্গফুট",
+
+  "language": "ভাষা",
+  "english": "ইংরেজি",
+  "bengali": "বাংলা",
+  "welcome": "স্বাগতম!",
+  "welcomeSubtitle": "বাংলাদেশের জন্য তৈরি জমি পরিমাপ অ্যাপ",
+  "features": "বৈশিষ্ট্যসমূহ",
+  "unitsInfo": "একক পরিচিতি",
+  "close": "বন্ধ করুন",
+  "allUnits": "সব এককে",
+  "saving": "সংরক্ষণ হচ্ছে...",
+  "error": "ত্রুটি",
+  "selectUnitLabel": "একক নির্বাচন",
+  "from": "থেকে",
+  "to": "তে",
+  "allConversionsLabel": "সব রূপান্তর",
+  "mapSource": "মানচিত্র",
+
+  "selectShape": "আকৃতি নির্বাচন",
+  "verticesLabel": "শীর্ষবিন্দু ({count} টি)",
+  "@verticesLabel": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "result": "ফলাফল",
+  "saveResult": "ইতিহাসে সংরক্ষণ",
+  "allUnitsLabel": "সব এককে"
 }

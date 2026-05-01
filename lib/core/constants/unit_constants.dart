@@ -35,6 +35,8 @@ enum AreaUnit {
     }
   }
 
+  String label(String locale) => locale == 'bn' ? labelBn : labelEn;
+
   String get shortLabel {
     switch (this) {
       case squareFeet:

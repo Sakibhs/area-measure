@@ -1,4 +1,5 @@
 import 'package:area_and_plot/features/area_calculator/domain/entities/area_calculation.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -50,13 +51,13 @@ class _RectangleInputs extends StatelessWidget {
     return Column(
       children: [
         _NumericField(
-          label: 'প্রস্থ (ফুট)',
+          label: '${AppLocalizations.of(context).width} (ft)',
           value: dimensions.isNotEmpty ? dimensions[0] : 0,
           onChanged: (v) => onChanged(0, v),
         ),
         const SizedBox(height: 12),
         _NumericField(
-          label: 'দৈর্ঘ্য (ফুট)',
+          label: '${AppLocalizations.of(context).length} (ft)',
           value: dimensions.length > 1 ? dimensions[1] : 0,
           onChanged: (v) => onChanged(1, v),
         ),
@@ -76,13 +77,13 @@ class _TriangleInputs extends StatelessWidget {
     return Column(
       children: [
         _NumericField(
-          label: 'ভূমি (ফুট)',
+          label: '${AppLocalizations.of(context).base} (ft)',
           value: dimensions.isNotEmpty ? dimensions[0] : 0,
           onChanged: (v) => onChanged(0, v),
         ),
         const SizedBox(height: 12),
         _NumericField(
-          label: 'উচ্চতা (ফুট)',
+          label: '${AppLocalizations.of(context).height} (ft)',
           value: dimensions.length > 1 ? dimensions[1] : 0,
           onChanged: (v) => onChanged(1, v),
         ),
@@ -112,19 +113,19 @@ class _PolygonInputs extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text('শীর্ষবিন্দু ($vertexCount টি)',
+            Text(AppLocalizations.of(context).verticesLabel(vertexCount),
                 style: Theme.of(context).textTheme.labelLarge),
             const Spacer(),
             IconButton.outlined(
               onPressed: vertexCount > 3 ? onRemoveVertex : null,
               icon: const Icon(Icons.remove),
-              tooltip: 'বিন্দু সরান',
+              tooltip: AppLocalizations.of(context).removeVertex,
             ),
             const SizedBox(width: 8),
             IconButton.outlined(
               onPressed: vertexCount < 20 ? onAddVertex : null,
               icon: const Icon(Icons.add),
-              tooltip: 'বিন্দু যোগ করুন',
+              tooltip: AppLocalizations.of(context).addVertex,
             ),
           ],
         ),
@@ -205,7 +206,7 @@ class _NumericFieldState extends State<_NumericField> {
       ],
       decoration: InputDecoration(
         labelText: widget.label,
-        suffixText: 'ফুট',
+        suffixText: 'ft',
       ),
       onChanged: (text) {
         final value = double.tryParse(text) ?? 0.0;

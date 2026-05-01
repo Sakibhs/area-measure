@@ -1,6 +1,8 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
 import 'package:area_and_plot/core/utils/number_formatter.dart';
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/unit_converter/presentation/providers/unit_converter_provider.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,9 +14,11 @@ class UnitConverterScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(unitConverterNotifierProvider);
     final notifier = ref.read(unitConverterNotifierProvider.notifier);
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('একক রূপান্তরকারী')),
+      drawer: const AppDrawer(),
+      appBar: AppBar(title: Text(l.unitConverter)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -28,7 +32,7 @@ class UnitConverterScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 24),
             if (state.inputValue > 0) ...[
-              Text('সব এককে রূপান্তর',
+              Text(l.allConversionsLabel,
                   style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               ...AreaUnit.values.map(
@@ -57,7 +61,7 @@ class _InfoCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'বাংলাদেশ মান',
+              AppLocalizations.of(context).bangladeshUnits,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onSecondaryContainer,
                   ),
@@ -108,9 +112,9 @@ class _InputSectionState extends State<_InputSection> {
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
           ],
-          decoration: const InputDecoration(
-            labelText: 'মান লিখুন',
-            prefixIcon: Icon(Icons.straighten_outlined),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).enterValue,
+            prefixIcon: const Icon(Icons.straighten_outlined),
           ),
           onChanged: (text) {
             final value = double.tryParse(text) ?? 0.0;
@@ -123,7 +127,7 @@ class _InputSectionState extends State<_InputSection> {
           children: [
             Expanded(
               child: _UnitDropdown(
-                label: 'থেকে',
+                label: AppLocalizations.of(context).from,
                 value: widget.state.fromUnit,
                 onChanged: widget.notifier.setFromUnit,
               ),
@@ -135,7 +139,7 @@ class _InputSectionState extends State<_InputSection> {
             ),
             Expanded(
               child: _UnitDropdown(
-                label: 'তে',
+                label: AppLocalizations.of(context).to,
                 value: widget.state.toUnit,
                 onChanged: widget.notifier.setToUnit,
               ),
@@ -162,7 +166,7 @@ class _InputSectionState extends State<_InputSection> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  widget.state.toUnit.labelBn,
+                  widget.state.toUnit.label(AppLocalizations.of(context).localeName),
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
                       ),
@@ -199,7 +203,7 @@ class _UnitDropdown extends StatelessWidget {
           isExpanded: true,
           style: theme.textTheme.bodyMedium,
           items: AreaUnit.values
-              .map((u) => DropdownMenuItem(value: u, child: Text(u.labelBn)))
+              .map((u) => DropdownMenuItem(value: u, child: Text(u.label(AppLocalizations.of(context).localeName))))
               .toList(),
           onChanged: (u) {
             if (u != null) onChanged(u);

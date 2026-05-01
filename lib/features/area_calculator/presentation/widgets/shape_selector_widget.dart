@@ -1,4 +1,5 @@
 import 'package:area_and_plot/features/area_calculator/domain/entities/area_calculation.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class ShapeSelectorWidget extends StatelessWidget {
@@ -16,7 +17,7 @@ class ShapeSelectorWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('আকৃতি নির্বাচন', style: Theme.of(context).textTheme.labelLarge),
+        Text(AppLocalizations.of(context).selectShape, style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 8),
         Row(
           children: AreaShape.values.map((shape) {
@@ -86,7 +87,7 @@ class _ShapeCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              shape.labelBn,
+              shape.label(AppLocalizations.of(context).localeName),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,

@@ -1,6 +1,8 @@
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_bottom_panel.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_view_widget.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,20 +14,22 @@ class MapCalculatorScreen extends ConsumerWidget {
     final state = ref.watch(mapCalculatorNotifierProvider);
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('মানচিত্র হিসাবক'),
+        title: Text(l.mapCalculator),
         actions: [
           IconButton(
             icon: const Icon(Icons.undo),
             onPressed: state.points.isNotEmpty ? notifier.undoLastPoint : null,
-            tooltip: 'শেষ বিন্দু বাদ দিন',
+            tooltip: l.undoLastPoint,
           ),
           IconButton(
             icon: const Icon(Icons.clear_all),
             onPressed: state.points.isNotEmpty ? notifier.clearPoints : null,
-            tooltip: 'সব মুছুন',
+            tooltip: l.clearPoints,
           ),
         ],
       ),
@@ -52,8 +56,8 @@ class MapCalculatorScreen extends ConsumerWidget {
                 ),
                 child: Text(
                   state.points.isEmpty
-                      ? 'বিন্দু যোগ করতে মানচিত্রে ট্যাপ করুন'
-                      : '${state.points.length} টি বিন্দু যোগ হয়েছে',
+                      ? l.tapToAddPoints
+                      : l.pointsAdded(state.points.length),
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),

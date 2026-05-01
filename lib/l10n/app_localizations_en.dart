@@ -256,4 +256,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get acreInfo => '1 Acre = 43,560 sq ft';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get bengali => 'Bengali';
+
+  @override
+  String get welcome => 'Welcome!';
+
+  @override
+  String get welcomeSubtitle => 'Land measurement app made for Bangladesh';
+
+  @override
+  String get features => 'Features';
+
+  @override
+  String get unitsInfo => 'Unit Information';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get allUnits => 'All Units';
+
+  @override
+  String get saving => 'Saving...';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get selectUnitLabel => 'Select Unit';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get to => 'To';
+
+  @override
+  String get allConversionsLabel => 'All Conversions';
+
+  @override
+  String get mapSource => 'Map';
+
+  @override
+  String get selectShape => 'Select Shape';
+
+  @override
+  String verticesLabel(int count) {
+    return 'Vertices ($count)';
+  }
+
+  @override
+  String get saveResult => 'Save to History';
+
+  @override
+  String get allUnitsLabel => 'All Units';
 }

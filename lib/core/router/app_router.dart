@@ -1,8 +1,10 @@
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/area_calculator/presentation/screens/area_calculator_screen.dart';
 import 'package:area_and_plot/features/history/presentation/screens/history_screen.dart';
 import 'package:area_and_plot/features/home/presentation/screens/home_screen.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/screens/map_calculator_screen.dart';
 import 'package:area_and_plot/features/unit_converter/presentation/screens/unit_converter_screen.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,46 +14,29 @@ final appRouter = GoRouter(
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => _ScaffoldWithNavBar(shell: shell),
       branches: [
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/',
-              builder: (context, state) => const HomeScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
+        StatefulShellBranch(routes: [
+          GoRoute(path: '/', builder: (_, __) => const HomeScreen()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
               path: '/calculator',
-              builder: (context, state) => const AreaCalculatorScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
+              builder: (_, __) => const AreaCalculatorScreen()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
               path: '/map',
-              builder: (context, state) => const MapCalculatorScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
+              builder: (_, __) => const MapCalculatorScreen()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
               path: '/converter',
-              builder: (context, state) => const UnitConverterScreen(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
+              builder: (_, __) => const UnitConverterScreen()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
               path: '/history',
-              builder: (context, state) => const HistoryScreen(),
-            ),
-          ],
-        ),
+              builder: (_, __) => const HistoryScreen()),
+        ]),
       ],
     ),
   ],
@@ -64,36 +49,38 @@ class _ScaffoldWithNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
+      drawer: const AppDrawer(),
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
         onDestinationSelected: shell.goBranch,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'হোম',
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l.home,
           ),
           NavigationDestination(
-            icon: Icon(Icons.calculate_outlined),
-            selectedIcon: Icon(Icons.calculate),
-            label: 'হিসাব',
+            icon: const Icon(Icons.calculate_outlined),
+            selectedIcon: const Icon(Icons.calculate),
+            label: l.calculator,
           ),
           NavigationDestination(
-            icon: Icon(Icons.map_outlined),
-            selectedIcon: Icon(Icons.map),
-            label: 'মানচিত্র',
+            icon: const Icon(Icons.map_outlined),
+            selectedIcon: const Icon(Icons.map),
+            label: l.map,
           ),
           NavigationDestination(
-            icon: Icon(Icons.swap_horiz_outlined),
-            selectedIcon: Icon(Icons.swap_horiz),
-            label: 'রূপান্তর',
+            icon: const Icon(Icons.swap_horiz_outlined),
+            selectedIcon: const Icon(Icons.swap_horiz),
+            label: l.converter,
           ),
           NavigationDestination(
-            icon: Icon(Icons.history_outlined),
-            selectedIcon: Icon(Icons.history),
-            label: 'ইতিহাস',
+            icon: const Icon(Icons.history_outlined),
+            selectedIcon: const Icon(Icons.history),
+            label: l.history,
           ),
         ],
       ),

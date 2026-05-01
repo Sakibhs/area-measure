@@ -256,4 +256,66 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get acreInfo => '১ একর = ৪৩,৫৬০ বর্গফুট';
+
+  @override
+  String get language => 'ভাষা';
+
+  @override
+  String get english => 'ইংরেজি';
+
+  @override
+  String get bengali => 'বাংলা';
+
+  @override
+  String get welcome => 'স্বাগতম!';
+
+  @override
+  String get welcomeSubtitle => 'বাংলাদেশের জন্য তৈরি জমি পরিমাপ অ্যাপ';
+
+  @override
+  String get features => 'বৈশিষ্ট্যসমূহ';
+
+  @override
+  String get unitsInfo => 'একক পরিচিতি';
+
+  @override
+  String get close => 'বন্ধ করুন';
+
+  @override
+  String get allUnits => 'সব এককে';
+
+  @override
+  String get saving => 'সংরক্ষণ হচ্ছে...';
+
+  @override
+  String get error => 'ত্রুটি';
+
+  @override
+  String get selectUnitLabel => 'একক নির্বাচন';
+
+  @override
+  String get from => 'থেকে';
+
+  @override
+  String get to => 'তে';
+
+  @override
+  String get allConversionsLabel => 'সব রূপান্তর';
+
+  @override
+  String get mapSource => 'মানচিত্র';
+
+  @override
+  String get selectShape => 'আকৃতি নির্বাচন';
+
+  @override
+  String verticesLabel(int count) {
+    return 'শীর্ষবিন্দু ($count টি)';
+  }
+
+  @override
+  String get saveResult => 'ইতিহাসে সংরক্ষণ';
+
+  @override
+  String get allUnitsLabel => 'সব এককে';
 }

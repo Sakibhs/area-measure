@@ -583,6 +583,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'1 Acre = 43,560 sq ft'**
   String get acreInfo;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @bengali.
+  ///
+  /// In en, this message translates to:
+  /// **'Bengali'**
+  String get bengali;
+
+  /// No description provided for @welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome!'**
+  String get welcome;
+
+  /// No description provided for @welcomeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Land measurement app made for Bangladesh'**
+  String get welcomeSubtitle;
+
+  /// No description provided for @features.
+  ///
+  /// In en, this message translates to:
+  /// **'Features'**
+  String get features;
+
+  /// No description provided for @unitsInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit Information'**
+  String get unitsInfo;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @allUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'All Units'**
+  String get allUnits;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving...'**
+  String get saving;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @selectUnitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Unit'**
+  String get selectUnitLabel;
+
+  /// No description provided for @from.
+  ///
+  /// In en, this message translates to:
+  /// **'From'**
+  String get from;
+
+  /// No description provided for @to.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get to;
+
+  /// No description provided for @allConversionsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'All Conversions'**
+  String get allConversionsLabel;
+
+  /// No description provided for @mapSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Map'**
+  String get mapSource;
+
+  /// No description provided for @selectShape.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Shape'**
+  String get selectShape;
+
+  /// No description provided for @verticesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertices ({count})'**
+  String verticesLabel(int count);
+
+  /// No description provided for @saveResult.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to History'**
+  String get saveResult;
+
+  /// No description provided for @allUnitsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'All Units'**
+  String get allUnitsLabel;
 }
 
 class _AppLocalizationsDelegate

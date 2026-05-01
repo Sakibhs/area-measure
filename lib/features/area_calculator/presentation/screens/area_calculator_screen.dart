@@ -1,8 +1,10 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
 import 'package:area_and_plot/core/utils/number_formatter.dart';
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/area_calculator/presentation/providers/area_calculator_provider.dart';
 import 'package:area_and_plot/features/area_calculator/presentation/widgets/dimension_input_widget.dart';
 import 'package:area_and_plot/features/area_calculator/presentation/widgets/shape_selector_widget.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,15 +17,17 @@ class AreaCalculatorScreen extends ConsumerWidget {
     final notifier = ref.read(areaCalculatorNotifierProvider.notifier);
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('ক্ষেত্রফল হিসাবক'),
+        title: Text(l.areaCalculator),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: notifier.reset,
-            tooltip: 'Reset',
+            tooltip: l.reset,
           ),
         ],
       ),
@@ -56,7 +60,7 @@ class AreaCalculatorScreen extends ConsumerWidget {
             ElevatedButton.icon(
               onPressed: notifier.calculate,
               icon: const Icon(Icons.calculate),
-              label: const Text('হিসাব করুন'),
+              label: Text(l.calculate),
             ),
             if (state.result != null) ...[
               const SizedBox(height: 24),
@@ -77,7 +81,7 @@ class AreaCalculatorScreen extends ConsumerWidget {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.save_outlined),
-                label: Text(state.isSaving ? 'সংরক্ষণ হচ্ছে...' : 'ইতিহাসে সংরক্ষণ'),
+                label: Text(state.isSaving ? l.saving : l.saveResult),
               ),
             ],
           ],
@@ -98,13 +102,13 @@ class _UnitSelector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('একক নির্বাচন', style: Theme.of(context).textTheme.labelLarge),
+        Text(AppLocalizations.of(context).selectUnitLabel, style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           children: AreaUnit.values.map((unit) {
             return ChoiceChip(
-              label: Text(unit.labelBn),
+              label: Text(unit.label(AppLocalizations.of(context).localeName)),
               selected: selected == unit,
               onSelected: (_) => onChanged(unit),
             );
@@ -136,7 +140,7 @@ class _ResultCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'ফলাফল',
+              AppLocalizations.of(context).result,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                   ),
@@ -150,7 +154,7 @@ class _ResultCard extends StatelessWidget {
                   ),
             ),
             Text(
-              state.displayUnit.labelBn,
+              state.displayUnit.label(AppLocalizations.of(context).localeName),
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: colorScheme.onPrimaryContainer,
                   ),
@@ -176,7 +180,7 @@ class _AllUnitsCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('সব এককে', style: Theme.of(context).textTheme.titleMedium),
+            Text(AppLocalizations.of(context).allUnitsLabel, style: Theme.of(context).textTheme.titleMedium),
             const Divider(),
             ...AreaUnit.values.map(
               (unit) => Padding(
@@ -184,7 +188,7 @@ class _AllUnitsCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(unit.labelBn),
+                    Text(unit.label(AppLocalizations.of(context).localeName)),
                     Text(
                       NumberFormatter.format(values[unit] ?? 0),
                       style: const TextStyle(fontWeight: FontWeight.w600),
