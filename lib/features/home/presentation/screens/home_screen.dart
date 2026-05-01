@@ -1,4 +1,6 @@
 import 'package:area_and_plot/core/theme/app_colors.dart';
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,11 +10,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final l = AppLocalizations.of(context);
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('জমির হিসাব'),
+        title: Text(l.appName),
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
@@ -25,9 +28,9 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _WelcomeBanner(colorScheme: colorScheme),
+            const _WelcomeBanner(),
             const SizedBox(height: 24),
-            Text('বৈশিষ্ট্যসমূহ', style: theme.textTheme.titleLarge),
+            Text(l.features, style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
             GridView.count(
               crossAxisCount: 2,
@@ -38,36 +41,36 @@ class HomeScreen extends StatelessWidget {
               children: [
                 _FeatureCard(
                   icon: Icons.calculate,
-                  title: 'ক্ষেত্রফল হিসাবক',
-                  subtitle: 'যেকোনো আকৃতির ক্ষেত্রফল',
+                  title: l.featureAreaCalculator,
+                  subtitle: l.featureAreaCalculatorDesc,
                   color: AppColors.primaryLight,
                   onTap: () => context.go('/calculator'),
                 ),
                 _FeatureCard(
                   icon: Icons.map,
-                  title: 'মানচিত্র হিসাবক',
-                  subtitle: 'মানচিত্রে এঁকে জমি মাপুন',
+                  title: l.featureMapCalculator,
+                  subtitle: l.featureMapCalculatorDesc,
                   color: const Color(0xFF00897B),
                   onTap: () => context.go('/map'),
                 ),
                 _FeatureCard(
                   icon: Icons.swap_horiz,
-                  title: 'একক রূপান্তর',
-                  subtitle: 'জমির একক পরিবর্তন',
+                  title: l.featureUnitConverter,
+                  subtitle: l.featureUnitConverterDesc,
                   color: AppColors.secondary,
                   onTap: () => context.go('/converter'),
                 ),
                 _FeatureCard(
                   icon: Icons.history,
-                  title: 'ইতিহাস',
-                  subtitle: 'সংরক্ষিত হিসাব দেখুন',
+                  title: l.featureHistory,
+                  subtitle: l.featureHistoryDesc,
                   color: const Color(0xFF6D4C41),
                   onTap: () => context.go('/history'),
                 ),
               ],
             ),
             const SizedBox(height: 24),
-            _QuickReferenceCard(),
+            const _QuickReferenceCard(),
           ],
         ),
       ),
@@ -86,12 +89,11 @@ class HomeScreen extends StatelessWidget {
 }
 
 class _WelcomeBanner extends StatelessWidget {
-  const _WelcomeBanner({required this.colorScheme});
-
-  final ColorScheme colorScheme;
+  const _WelcomeBanner();
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -109,7 +111,7 @@ class _WelcomeBanner extends StatelessWidget {
           const Icon(Icons.landscape, color: Colors.white, size: 36),
           const SizedBox(height: 8),
           Text(
-            'স্বাগতম!',
+            l.welcome,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -117,7 +119,7 @@ class _WelcomeBanner extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'বাংলাদেশের জন্য তৈরি জমি পরিমাপ অ্যাপ',
+            l.welcomeSubtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.white70,
                 ),
@@ -190,14 +192,12 @@ class _FeatureCard extends StatelessWidget {
 }
 
 class _QuickReferenceCard extends StatelessWidget {
+  const _QuickReferenceCard();
+
   @override
   Widget build(BuildContext context) {
-    final rows = [
-      ('১ কাঠা', '৭২০ বর্গফুট'),
-      ('১ বিঘা', '২০ কাঠা = ১৪,৪০০ বর্গফুট'),
-      ('১ ডেসিমাল', '৪৩৫.৫৬ বর্গফুট'),
-      ('১ একর', '৪৩,৫৬০ বর্গফুট'),
-    ];
+    final l = AppLocalizations.of(context);
+    final items = [l.kathaInfo, l.bighaInfo, l.decimalInfo, l.acreInfo];
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -208,26 +208,15 @@ class _QuickReferenceCard extends StatelessWidget {
               children: [
                 const Icon(Icons.info_outline, size: 18),
                 const SizedBox(width: 8),
-                Text('বাংলাদেশ মান',
+                Text(l.bangladeshUnits,
                     style: Theme.of(context).textTheme.titleMedium),
               ],
             ),
             const Divider(height: 16),
-            ...rows.map(
-              (r) => Padding(
+            ...items.map(
+              (info) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(r.$1,
-                        style: const TextStyle(fontWeight: FontWeight.w600)),
-                    Text(r.$2,
-                        style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant)),
-                  ],
-                ),
+                child: Text('• $info'),
               ),
             ),
           ],
@@ -242,28 +231,28 @@ class _UnitsInfoSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('একক পরিচিতি',
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(l.unitsInfo, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
-          const Text('• ১ কাঠা = ৭২০ বর্গফুট (বাংলাদেশ মান)'),
+          Text('• ${l.kathaInfo}'),
           const SizedBox(height: 8),
-          const Text('• ১ বিঘা = ২০ কাঠা = ১৪,৪০০ বর্গফুট'),
+          Text('• ${l.bighaInfo}'),
           const SizedBox(height: 8),
-          const Text('• ১ ডেসিমাল = ৪৩৫.৫৬ বর্গফুট (১/১০০ একর)'),
+          Text('• ${l.decimalInfo}'),
           const SizedBox(height: 8),
-          const Text('• ১ একর = ৪৩,৫৬০ বর্গফুট'),
+          Text('• ${l.acreInfo}'),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             child: FilledButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('বন্ধ করুন'),
+              child: Text(l.close),
             ),
           ),
         ],

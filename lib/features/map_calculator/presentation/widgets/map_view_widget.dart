@@ -59,21 +59,12 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     if (_draggingIndex != null) setState(() => _draggingIndex = null);
   }
 
-  void _toggleMapStyle() {
-    setState(() {
-      _mapStyle = _mapStyle == _MapStyle.street
-          ? _MapStyle.satellite
-          : _MapStyle.street;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final points = ref.watch(mapCalculatorNotifierProvider).points;
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
-    final isSatellite = _mapStyle == _MapStyle.satellite;
 
     return Stack(
       children: [
@@ -164,43 +155,78 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
           ],
         ),
         Positioned(
-          top: 8,
-          right: 8,
-          child: GestureDetector(
-            onTap: _toggleMapStyle,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 6),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    isSatellite ? Icons.map_outlined : Icons.satellite_alt,
-                    size: 16,
-                    color: Colors.black87,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    isSatellite ? 'Street' : 'Satellite',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+          top: 56,
+          right: 12,
+          child: _MapStyleButton(
+            current: _mapStyle,
+            onSelected: (style) => setState(() => _mapStyle = style),
           ),
         ),
       ],
+    );
+  }
+}
+
+class _MapStyleButton extends StatelessWidget {
+  const _MapStyleButton({required this.current, required this.onSelected});
+
+  final _MapStyle current;
+  final ValueChanged<_MapStyle> onSelected;
+
+  Future<void> _showMenu(BuildContext context, Offset tapPosition) async {
+    final colorScheme = Theme.of(context).colorScheme;
+    final screenSize = MediaQuery.of(context).size;
+    final result = await showMenu<_MapStyle>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        tapPosition.dx,
+        tapPosition.dy,
+        screenSize.width - tapPosition.dx,
+        screenSize.height - tapPosition.dy,
+      ),
+      items: [
+        PopupMenuItem(
+          value: _MapStyle.street,
+          child: Row(children: [
+            Icon(Icons.map_outlined,
+                size: 18,
+                color: current == _MapStyle.street ? colorScheme.primary : null),
+            const SizedBox(width: 8),
+            const Text('Street'),
+          ]),
+        ),
+        PopupMenuItem(
+          value: _MapStyle.satellite,
+          child: Row(children: [
+            Icon(Icons.satellite_alt,
+                size: 18,
+                color: current == _MapStyle.satellite
+                    ? colorScheme.primary
+                    : null),
+            const SizedBox(width: 8),
+            const Text('Satellite'),
+          ]),
+        ),
+      ],
+    );
+    if (result != null) onSelected(result);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTapUp: (details) => _showMenu(context, details.globalPosition),
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+        ),
+        child: const Icon(Icons.more_vert, size: 20, color: Colors.black87),
+      ),
     );
   }
 }

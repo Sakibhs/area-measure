@@ -1,8 +1,10 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
 import 'package:area_and_plot/core/utils/area_converter.dart';
 import 'package:area_and_plot/core/utils/number_formatter.dart';
+import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
 import 'package:area_and_plot/features/history/presentation/providers/history_provider.dart';
+import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -32,14 +34,16 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: const Text('হিসাবের ইতিহাস'),
+        title: Text(l.calculationHistory),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(text: 'সব'),
-            Tab(text: 'প্রিয়'),
+          tabs: [
+            Tab(text: l.allHistory),
+            Tab(text: l.favorites),
           ],
         ),
       ),
@@ -61,15 +65,14 @@ class _HistoryList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l = AppLocalizations.of(context);
     final async = ref.watch(provider);
 
     return async.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, _) => Center(child: Text('ত্রুটি: $e')),
+      error: (e, _) => Center(child: Text('${l.error}: $e')),
       data: (entries) {
-        if (entries.isEmpty) {
-          return const _EmptyState();
-        }
+        if (entries.isEmpty) return const _EmptyState();
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(historyNotifierProvider),
           child: ListView.separated(
@@ -92,18 +95,19 @@ class _HistoryList extends ConsumerWidget {
 
   Future<void> _confirmDelete(
       BuildContext context, WidgetRef ref, String id) async {
+    final l = AppLocalizations.of(context);
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('মুছে ফেলুন?'),
-        content: const Text('এই হিসাবটি মুছে ফেলতে চান?'),
+        title: Text(l.deleteConfirmTitle),
+        content: Text(l.deleteConfirmMessage),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('বাতিল')),
+              child: Text(l.cancel)),
           FilledButton(
               onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('মুছুন')),
+              child: Text(l.delete)),
         ],
       ),
     );
@@ -124,25 +128,21 @@ class _HistoryCard extends StatelessWidget {
   final VoidCallback onDelete;
   final VoidCallback onToggleFavorite;
 
-  String get _shapeLabel {
-    final shape = entry.shape;
-    if (shape == null) return 'মানচিত্র';
-    return shape.labelBn;
-  }
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(entry.createdAt);
 
-  String get _areaDisplay {
-    final value = AreaConverter.convert(
+    final shapeLabel =
+        entry.shape == null ? l.map : entry.shape!.label(l.localeName);
+    final areaValue = AreaConverter.convert(
       value: entry.areaInSqFt,
       from: AreaUnit.squareFeet,
       to: entry.displayUnit,
     );
-    return '${NumberFormatter.format(value)} ${entry.displayUnit.labelBn}';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(entry.createdAt);
+    final areaDisplay =
+        '${NumberFormatter.format(areaValue)} ${entry.displayUnit.label(l.localeName)}';
 
     return Card(
       child: Padding(
@@ -173,13 +173,13 @@ class _HistoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _shapeLabel,
+                    shapeLabel,
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                         ),
                   ),
                   Text(
-                    _areaDisplay,
+                    areaDisplay,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -217,6 +217,7 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -224,13 +225,14 @@ class _EmptyState extends StatelessWidget {
           Icon(Icons.history_outlined,
               size: 80, color: Theme.of(context).colorScheme.outlineVariant),
           const SizedBox(height: 16),
-          Text('কোনো সংরক্ষিত হিসাব নেই',
-              style: Theme.of(context).textTheme.titleMedium),
+          Text(l.noHistory, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          Text('আপনার হিসাব এখানে দেখাবে',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  )),
+          Text(
+            l.noHistorySubtitle,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
         ],
       ),
     );

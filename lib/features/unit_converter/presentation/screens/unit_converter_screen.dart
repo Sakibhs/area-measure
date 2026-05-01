@@ -67,8 +67,8 @@ class _InfoCard extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 4),
-            const Text('১ কাঠা = ৭২০ বর্গফুট | ১ বিঘা = ২০ কাঠা'),
-            const Text('১ ডেসিমাল = ৪৩৫.৫৬ বর্গফুট | ১ একর = ৪৩,৫৬০ বর্গফুট'),
+            Text('${AppLocalizations.of(context).kathaInfo} | ${AppLocalizations.of(context).bighaInfo}'),
+            Text('${AppLocalizations.of(context).decimalInfo} | ${AppLocalizations.of(context).acreInfo}'),
           ],
         ),
       ),
@@ -244,7 +244,7 @@ class _ConversionRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            unit.labelBn,
+            unit.label(AppLocalizations.of(context).localeName),
             style: TextStyle(
               fontWeight: isHighlighted ? FontWeight.w600 : FontWeight.normal,
               color: isHighlighted ? colorScheme.primary : null,

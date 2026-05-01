@@ -1,4 +1,3 @@
-import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_bottom_panel.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_view_widget.dart';
@@ -17,52 +16,38 @@ class MapCalculatorScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
 
     return Scaffold(
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: Text(l.mapCalculator),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.undo),
-            onPressed: state.points.isNotEmpty ? notifier.undoLastPoint : null,
-            tooltip: l.undoLastPoint,
-          ),
-          IconButton(
-            icon: const Icon(Icons.clear_all),
-            onPressed: state.points.isNotEmpty ? notifier.clearPoints : null,
-            tooltip: l.clearPoints,
-          ),
-        ],
-      ),
       body: Stack(
         children: [
           const MapViewWidget(),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: MapBottomPanel(state: state, notifier: notifier),
-          ),
-          Positioned(
-            top: 12,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withAlpha(220),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  state.points.isEmpty
-                      ? l.tapToAddPoints
-                      : l.pointsAdded(state.points.length),
-                  style: Theme.of(context).textTheme.bodyMedium,
+          if (state.points.length >= 3)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: MapBottomPanel(state: state, notifier: notifier),
+            ),
+          if (state.points.length < 3)
+            Positioned(
+              bottom: 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surfaceContainerHighest.withAlpha(220),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    state.points.isEmpty
+                        ? l.tapToAddPoints
+                        : l.pointsAdded(state.points.length),
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

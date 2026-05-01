@@ -37,61 +37,52 @@ class MapBottomPanel extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          if (state.points.length >= 3) ...[
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l.area,
-                          style: Theme.of(context).textTheme.labelMedium),
-                      Text(
-                        '${NumberFormatter.format(notifier.displayValue)} ${state.displayUnit.label(l.localeName)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
-                            ),
-                      ),
-                    ],
-                  ),
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l.area,
+                        style: Theme.of(context).textTheme.labelMedium),
+                    Text(
+                      '${NumberFormatter.format(notifier.displayValue)} ${state.displayUnit.label(l.localeName)}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.primary,
+                          ),
+                    ),
+                  ],
                 ),
-                DropdownButton<AreaUnit>(
-                  value: state.displayUnit,
-                  underline: const SizedBox.shrink(),
-                  items: AreaUnit.values
-                      .map((u) => DropdownMenuItem(
-                          value: u, child: Text(u.label(l.localeName))))
-                      .toList(),
-                  onChanged: (u) {
-                    if (u != null) notifier.setDisplayUnit(u);
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton.icon(
-              onPressed: state.isSaving ? null : notifier.saveToHistory,
-              icon: state.isSaving
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.save_outlined),
-              label: Text(state.isSaving ? l.saving : l.saveToHistory),
-            ),
-          ] else
-            Text(
-              l.addAtLeastThreePoints,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-              textAlign: TextAlign.center,
-            ),
+              ),
+              DropdownButton<AreaUnit>(
+                value: state.displayUnit,
+                underline: const SizedBox.shrink(),
+                items: AreaUnit.values
+                    .map((u) => DropdownMenuItem(
+                        value: u, child: Text(u.label(l.localeName))))
+                    .toList(),
+                onChanged: (u) {
+                  if (u != null) notifier.setDisplayUnit(u);
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: state.isSaving ? null : notifier.saveToHistory,
+            icon: state.isSaving
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.save_outlined),
+            label: Text(state.isSaving ? l.saving : l.saveToHistory),
+          ),
           if (state.errorMessage != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),

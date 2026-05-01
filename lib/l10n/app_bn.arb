@@ -127,7 +127,6 @@
   "@verticesLabel": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "result": "ফলাফল",
   "saveResult": "ইতিহাসে সংরক্ষণ",
   "allUnitsLabel": "সব এককে"
 }

@@ -129,7 +129,6 @@
   "@verticesLabel": {
     "placeholders": { "count": { "type": "int" } }
   },
-  "result": "Result",
   "saveResult": "Save to History",
   "allUnitsLabel": "All Units"
 }
