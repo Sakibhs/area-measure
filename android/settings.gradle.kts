@@ -28,17 +28,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        // Mapbox Maven repository — requires MAPBOX_DOWNLOADS_TOKEN in ~/.gradle/gradle.properties
-        maven {
-            url = uri("https://api.mapbox.com/downloads/v2/releases/maven")
-            authentication {
-                create<BasicAuthentication>("basic")
-            }
-            credentials {
-                username = "mapbox"
-                password = providers.gradleProperty("MAPBOX_DOWNLOADS_TOKEN").orElse("").get()
-            }
-        }
+        maven { url = uri("https://storage.googleapis.com/download.flutter.io") }
     }
 }
 

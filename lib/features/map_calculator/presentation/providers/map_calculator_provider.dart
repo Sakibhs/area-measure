@@ -45,6 +45,12 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
     state = state.copyWith(points: updated, areaInSqFt: area);
   }
 
+  void movePoint(int index, MapAreaPoint newPoint) {
+    if (index < 0 || index >= state.points.length) return;
+    final updated = List<MapAreaPoint>.from(state.points)..[index] = newPoint;
+    state = state.copyWith(points: updated, areaInSqFt: _useCase(updated));
+  }
+
   void clearPoints() {
     state = const MapCalculatorState();
   }

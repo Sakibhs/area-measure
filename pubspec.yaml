@@ -28,7 +28,8 @@ dependencies:
   path_provider: any
 
   # Maps
-  mapbox_maps_flutter: ^2.2.1
+  flutter_map: any
+  latlong2: any
 
   # Permissions
   permission_handler: any
