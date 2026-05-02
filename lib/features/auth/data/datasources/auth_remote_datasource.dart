@@ -12,9 +12,10 @@ abstract class AuthRemoteDataSource {
 }
 
 class FirebaseAuthDataSourceImpl implements AuthRemoteDataSource {
-  FirebaseAuthDataSourceImpl(this._auth);
+  FirebaseAuthDataSourceImpl(this._auth, this._googleSignIn);
 
   final FirebaseAuth _auth;
+  final GoogleSignIn _googleSignIn;
 
   @override
   Stream<AppUser?> get authStateChanges =>
@@ -23,10 +24,13 @@ class FirebaseAuthDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AppUser> signInWithGoogle() async {
     try {
-      final googleUser = await GoogleSignIn.instance.authenticate();
-      final googleAuth = googleUser.authentication;
+      final googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) throw const AuthException('Sign in was cancelled.');
+
+      final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
       );
 
       final result = await _auth.signInWithCredential(credential);
@@ -69,7 +73,7 @@ class FirebaseAuthDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await Future.wait([_auth.signOut(), GoogleSignIn.instance.signOut()]);
+      await Future.wait([_auth.signOut(), _googleSignIn.signOut()]);
     } catch (e, st) {
       debugPrint('SIGN_OUT_ERROR: $e');
       debugPrint('SIGN_OUT_STACKTRACE: $st');

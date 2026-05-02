@@ -30,7 +30,7 @@ dependencies:
   # Firebase & Auth
   firebase_core: any
   firebase_auth: any
-  google_sign_in: any
+  google_sign_in: ^6.2.1
 
   # Maps
   flutter_map: any

@@ -4,10 +4,11 @@ import 'package:area_and_plot/features/auth/domain/entities/app_user.dart';
 import 'package:area_and_plot/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepositoryImpl(
-    FirebaseAuthDataSourceImpl(FirebaseAuth.instance),
+    FirebaseAuthDataSourceImpl(FirebaseAuth.instance, GoogleSignIn()),
   );
 });
 
