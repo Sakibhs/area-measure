@@ -320,6 +320,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allUnitsLabel => 'All Units';
 
   @override
+  String get plotName => 'Plot Name';
+
+  @override
+  String get plotNotes => 'Details (optional)';
+
+  @override
   String get details => 'Details';
 
   @override

@@ -130,6 +130,8 @@
   "saveResult": "ইতিহাসে সংরক্ষণ",
   "allUnitsLabel": "সব এককে",
 
+  "plotName": "জমির নাম",
+  "plotNotes": "বিবরণ (ঐচ্ছিক)",
   "details": "বিস্তারিত",
   "dimensions": "মাপ",
   "dateCreated": "তারিখ",

@@ -20,5 +20,6 @@ class HistoryEntry with _$HistoryEntry {
     List<double>? dimensions,
     int? mapPointCount,
     List<double>? mapPoints,
+    String? notes,
   }) = _HistoryEntry;
 }

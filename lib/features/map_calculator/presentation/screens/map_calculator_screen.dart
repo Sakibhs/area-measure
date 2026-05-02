@@ -1,5 +1,5 @@
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
-import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_bottom_panel.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_save_form.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_view_widget.dart';
 import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -11,22 +11,15 @@ class MapCalculatorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mapCalculatorNotifierProvider);
-    final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
-    final colorScheme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final hasArea = state.points.length >= 3;
 
     return Scaffold(
       body: Stack(
         children: [
           const MapViewWidget(),
-          if (state.points.length >= 3)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: MapBottomPanel(state: state, notifier: notifier),
-            ),
-          if (state.points.length < 3)
+          if (!hasArea)
             Positioned(
               bottom: 16,
               left: 0,
@@ -48,8 +41,28 @@ class MapCalculatorScreen extends ConsumerWidget {
                 ),
               ),
             ),
+          if (hasArea)
+            Positioned(
+              bottom: 16,
+              right: 16,
+              child: FloatingActionButton(
+                onPressed: () => _openSaveForm(context, state.areaInSqFt),
+                child: const Icon(Icons.save_outlined),
+              ),
+            ),
         ],
       ),
+    );
+  }
+
+  void _openSaveForm(BuildContext context, double areaInSqFt) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => MapSaveForm(areaInSqFt: areaInSqFt),
     );
   }
 }

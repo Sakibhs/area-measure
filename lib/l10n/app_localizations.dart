@@ -704,6 +704,18 @@ abstract class AppLocalizations {
   /// **'All Units'**
   String get allUnitsLabel;
 
+  /// No description provided for @plotName.
+  ///
+  /// In en, this message translates to:
+  /// **'Plot Name'**
+  String get plotName;
+
+  /// No description provided for @plotNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Details (optional)'**
+  String get plotNotes;
+
   /// No description provided for @details.
   ///
   /// In en, this message translates to:

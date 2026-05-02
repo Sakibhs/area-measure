@@ -75,19 +75,22 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   Map<AreaUnit, double> get allValues =>
       AreaConverter.convertToAll(state.areaInSqFt);
 
-  Future<void> saveToHistory() async {
-    if (state.points.length < 3) {
-      state = state.copyWith(errorMessage: 'কমপক্ষে ৩টি বিন্দু প্রয়োজন');
-      return;
-    }
+  Future<void> saveToHistory({
+    String? label,
+    String? notes,
+    required AreaUnit displayUnit,
+  }) async {
+    if (state.points.length < 3) return;
     state = state.copyWith(isSaving: true, errorMessage: null);
     try {
       final entry = HistoryEntry(
         id: _uuid.v4(),
         type: HistoryType.mapCalculator,
         areaInSqFt: state.areaInSqFt,
-        displayUnit: state.displayUnit,
+        displayUnit: displayUnit,
         createdAt: DateTime.now(),
+        label: label,
+        notes: notes,
         mapPointCount: state.points.length,
         mapPoints: state.points
             .expand((p) => [p.latitude, p.longitude])

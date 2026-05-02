@@ -320,6 +320,12 @@ class AppLocalizationsBn extends AppLocalizations {
   String get allUnitsLabel => 'সব এককে';
 
   @override
+  String get plotName => 'জমির নাম';
+
+  @override
+  String get plotNotes => 'বিবরণ (ঐচ্ছিক)';
+
+  @override
   String get details => 'বিস্তারিত';
 
   @override

@@ -16,6 +16,7 @@ class HistoryEntryHiveModel {
     this.dimensions,
     this.mapPointCount,
     this.mapPoints,
+    this.notes,
   });
 
   final String id;
@@ -29,6 +30,7 @@ class HistoryEntryHiveModel {
   final List<double>? dimensions;
   final int? mapPointCount;
   final List<double>? mapPoints;
+  final String? notes;
 
   HistoryEntry toDomain() => HistoryEntry(
         id: id,
@@ -44,6 +46,7 @@ class HistoryEntryHiveModel {
         dimensions: dimensions,
         mapPointCount: mapPointCount,
         mapPoints: mapPoints,
+        notes: notes,
       );
 
   static HistoryEntryHiveModel fromDomain(HistoryEntry entry) =>
@@ -59,6 +62,7 @@ class HistoryEntryHiveModel {
         dimensions: entry.dimensions,
         mapPointCount: entry.mapPointCount,
         mapPoints: entry.mapPoints,
+        notes: entry.notes,
       );
 }
 
@@ -88,12 +92,13 @@ class HistoryEntryHiveModelAdapter extends TypeAdapter<HistoryEntryHiveModel> {
       mapPoints: (fields[10] as List?)
           ?.map((e) => (e as num).toDouble())
           .toList(),
+      notes: fields[11] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, HistoryEntryHiveModel obj) {
-    writer.writeByte(11);
+    writer.writeByte(12);
     writer.writeByte(0);
     writer.write(obj.id);
     writer.writeByte(1);
@@ -116,5 +121,7 @@ class HistoryEntryHiveModelAdapter extends TypeAdapter<HistoryEntryHiveModel> {
     writer.write(obj.mapPointCount);
     writer.writeByte(10);
     writer.write(obj.mapPoints);
+    writer.writeByte(11);
+    writer.write(obj.notes);
   }
 }

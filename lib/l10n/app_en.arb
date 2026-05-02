@@ -132,6 +132,8 @@
   "saveResult": "Save to History",
   "allUnitsLabel": "All Units",
 
+  "plotName": "Plot Name",
+  "plotNotes": "Details (optional)",
   "details": "Details",
   "dimensions": "Dimensions",
   "dateCreated": "Date",

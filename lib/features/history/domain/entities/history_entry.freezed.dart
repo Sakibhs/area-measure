@@ -27,6 +27,7 @@ mixin _$HistoryEntry {
   List<double>? get dimensions => throw _privateConstructorUsedError;
   int? get mapPointCount => throw _privateConstructorUsedError;
   List<double>? get mapPoints => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HistoryEntryCopyWith<HistoryEntry> get copyWith =>
@@ -50,7 +51,8 @@ abstract class $HistoryEntryCopyWith<$Res> {
       AreaShape? shape,
       List<double>? dimensions,
       int? mapPointCount,
-      List<double>? mapPoints});
+      List<double>? mapPoints,
+      String? notes});
 }
 
 /// @nodoc
@@ -77,6 +79,7 @@ class _$HistoryEntryCopyWithImpl<$Res, $Val extends HistoryEntry>
     Object? dimensions = freezed,
     Object? mapPointCount = freezed,
     Object? mapPoints = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -123,6 +126,10 @@ class _$HistoryEntryCopyWithImpl<$Res, $Val extends HistoryEntry>
           ? _value.mapPoints
           : mapPoints // ignore: cast_nullable_to_non_nullable
               as List<double>?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -146,7 +153,8 @@ abstract class _$$HistoryEntryImplCopyWith<$Res>
       AreaShape? shape,
       List<double>? dimensions,
       int? mapPointCount,
-      List<double>? mapPoints});
+      List<double>? mapPoints,
+      String? notes});
 }
 
 /// @nodoc
@@ -171,6 +179,7 @@ class __$$HistoryEntryImplCopyWithImpl<$Res>
     Object? dimensions = freezed,
     Object? mapPointCount = freezed,
     Object? mapPoints = freezed,
+    Object? notes = freezed,
   }) {
     return _then(_$HistoryEntryImpl(
       id: null == id
@@ -217,6 +226,10 @@ class __$$HistoryEntryImplCopyWithImpl<$Res>
           ? _value._mapPoints
           : mapPoints // ignore: cast_nullable_to_non_nullable
               as List<double>?,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -235,7 +248,8 @@ class _$HistoryEntryImpl implements _HistoryEntry {
       this.shape,
       final List<double>? dimensions,
       this.mapPointCount,
-      final List<double>? mapPoints})
+      final List<double>? mapPoints,
+      this.notes})
       : _dimensions = dimensions,
         _mapPoints = mapPoints;
 
@@ -279,8 +293,11 @@ class _$HistoryEntryImpl implements _HistoryEntry {
   }
 
   @override
+  final String? notes;
+
+  @override
   String toString() {
-    return 'HistoryEntry(id: $id, type: $type, areaInSqFt: $areaInSqFt, displayUnit: $displayUnit, createdAt: $createdAt, isFavorite: $isFavorite, label: $label, shape: $shape, dimensions: $dimensions, mapPointCount: $mapPointCount, mapPoints: $mapPoints)';
+    return 'HistoryEntry(id: $id, type: $type, areaInSqFt: $areaInSqFt, displayUnit: $displayUnit, createdAt: $createdAt, isFavorite: $isFavorite, label: $label, shape: $shape, dimensions: $dimensions, mapPointCount: $mapPointCount, mapPoints: $mapPoints, notes: $notes)';
   }
 
   @override
@@ -305,7 +322,8 @@ class _$HistoryEntryImpl implements _HistoryEntry {
             (identical(other.mapPointCount, mapPointCount) ||
                 other.mapPointCount == mapPointCount) &&
             const DeepCollectionEquality()
-                .equals(other._mapPoints, _mapPoints));
+                .equals(other._mapPoints, _mapPoints) &&
+            (identical(other.notes, notes) || other.notes == notes));
   }
 
   @override
@@ -321,7 +339,8 @@ class _$HistoryEntryImpl implements _HistoryEntry {
       shape,
       const DeepCollectionEquality().hash(_dimensions),
       mapPointCount,
-      const DeepCollectionEquality().hash(_mapPoints));
+      const DeepCollectionEquality().hash(_mapPoints),
+      notes);
 
   @JsonKey(ignore: true)
   @override
@@ -342,7 +361,8 @@ abstract class _HistoryEntry implements HistoryEntry {
       final AreaShape? shape,
       final List<double>? dimensions,
       final int? mapPointCount,
-      final List<double>? mapPoints}) = _$HistoryEntryImpl;
+      final List<double>? mapPoints,
+      final String? notes}) = _$HistoryEntryImpl;
 
   @override
   String get id;
@@ -366,6 +386,8 @@ abstract class _HistoryEntry implements HistoryEntry {
   int? get mapPointCount;
   @override
   List<double>? get mapPoints;
+  @override
+  String? get notes;
   @override
   @JsonKey(ignore: true)
   _$$HistoryEntryImplCopyWith<_$HistoryEntryImpl> get copyWith =>
