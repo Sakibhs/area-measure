@@ -55,6 +55,11 @@ class AppTheme {
             fontWeight: FontWeight.w600,
           ),
         ),
+        tabBarTheme: const TabBarThemeData(
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
+          indicatorColor: Colors.white,
+        ),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           selectedItemColor: AppColors.primaryLight,
           unselectedItemColor: Colors.grey,
@@ -122,6 +127,11 @@ class AppTheme {
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
+        ),
+        tabBarTheme: const TabBarThemeData(
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white60,
+          indicatorColor: Colors.white,
         ),
       );
 }
