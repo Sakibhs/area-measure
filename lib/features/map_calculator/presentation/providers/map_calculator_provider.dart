@@ -1,5 +1,5 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
-import 'package:area_and_plot/core/di/isar_provider.dart';
+import 'package:area_and_plot/core/di/hive_provider.dart';
 import 'package:area_and_plot/core/utils/area_converter.dart';
 import 'package:area_and_plot/features/history/data/datasources/history_local_datasource.dart';
 import 'package:area_and_plot/features/history/data/repositories/history_repository_impl.dart';
@@ -83,8 +83,8 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
         createdAt: DateTime.now(),
         mapPointCount: state.points.length,
       );
-      final isar = await ref.read(isarProvider.future);
-      final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(isar));
+      final boxes = await ref.read(hiveBoxesProvider.future);
+      final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
       await repo.save(entry);
     } catch (_) {
       state = state.copyWith(errorMessage: 'সংরক্ষণ ব্যর্থ হয়েছে');

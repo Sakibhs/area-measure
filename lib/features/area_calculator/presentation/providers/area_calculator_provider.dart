@@ -1,5 +1,5 @@
 import 'package:area_and_plot/core/constants/unit_constants.dart';
-import 'package:area_and_plot/core/di/isar_provider.dart';
+import 'package:area_and_plot/core/di/hive_provider.dart';
 import 'package:area_and_plot/core/error/exceptions.dart';
 import 'package:area_and_plot/core/utils/area_converter.dart';
 import 'package:area_and_plot/features/area_calculator/data/datasources/area_calculator_local_datasource.dart';
@@ -95,8 +95,8 @@ class AreaCalculatorNotifier extends _$AreaCalculatorNotifier {
     if (result == null) return;
     state = state.copyWith(isSaving: true);
     try {
-      final isar = await ref.read(isarProvider.future);
-      final dataSource = AreaCalculatorLocalDataSourceImpl(isar);
+      final boxes = await ref.read(hiveBoxesProvider.future);
+      final dataSource = AreaCalculatorLocalDataSourceImpl(boxes.areaCalculations);
       final repo = AreaCalculatorRepositoryImpl(dataSource);
       await repo.saveCalculation(result);
     } catch (_) {

@@ -1,4 +1,4 @@
-import 'package:area_and_plot/core/di/isar_provider.dart';
+import 'package:area_and_plot/core/di/hive_provider.dart';
 import 'package:area_and_plot/features/history/data/datasources/history_local_datasource.dart';
 import 'package:area_and_plot/features/history/data/repositories/history_repository_impl.dart';
 import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
@@ -10,21 +10,21 @@ part 'history_provider.g.dart';
 class HistoryNotifier extends _$HistoryNotifier {
   @override
   Future<List<HistoryEntry>> build() async {
-    final isar = await ref.watch(isarProvider.future);
-    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(isar));
+    final boxes = await ref.watch(hiveBoxesProvider.future);
+    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
     return repo.getAll();
   }
 
   Future<void> delete(String id) async {
-    final isar = await ref.read(isarProvider.future);
-    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(isar));
+    final boxes = await ref.read(hiveBoxesProvider.future);
+    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
     await repo.delete(id);
     ref.invalidateSelf();
   }
 
   Future<void> toggleFavorite(String id, {required bool isFavorite}) async {
-    final isar = await ref.read(isarProvider.future);
-    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(isar));
+    final boxes = await ref.read(hiveBoxesProvider.future);
+    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
     await repo.toggleFavorite(id, isFavorite: isFavorite);
     ref.invalidateSelf();
   }
@@ -34,8 +34,8 @@ class HistoryNotifier extends _$HistoryNotifier {
 class FavoritesNotifier extends _$FavoritesNotifier {
   @override
   Future<List<HistoryEntry>> build() async {
-    final isar = await ref.watch(isarProvider.future);
-    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(isar));
+    final boxes = await ref.watch(hiveBoxesProvider.future);
+    final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
     return repo.getFavorites();
   }
 }
