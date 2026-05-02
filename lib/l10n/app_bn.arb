@@ -130,6 +130,11 @@
   "saveResult": "ইতিহাসে সংরক্ষণ",
   "allUnitsLabel": "সব এককে",
 
+  "details": "বিস্তারিত",
+  "dimensions": "মাপ",
+  "dateCreated": "তারিখ",
+  "allAreaValues": "সব পরিমাপ",
+
   "account": "অ্যাকাউন্ট",
   "signInWithGoogle": "গুগল দিয়ে সাইন ইন করুন",
   "signOut": "সাইন আউট"

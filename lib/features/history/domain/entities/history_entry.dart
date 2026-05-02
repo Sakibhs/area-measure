@@ -19,5 +19,6 @@ class HistoryEntry with _$HistoryEntry {
     AreaShape? shape,
     List<double>? dimensions,
     int? mapPointCount,
+    List<double>? mapPoints,
   }) = _HistoryEntry;
 }

@@ -320,6 +320,18 @@ class AppLocalizationsBn extends AppLocalizations {
   String get allUnitsLabel => 'সব এককে';
 
   @override
+  String get details => 'বিস্তারিত';
+
+  @override
+  String get dimensions => 'মাপ';
+
+  @override
+  String get dateCreated => 'তারিখ';
+
+  @override
+  String get allAreaValues => 'সব পরিমাপ';
+
+  @override
   String get account => 'অ্যাকাউন্ট';
 
   @override

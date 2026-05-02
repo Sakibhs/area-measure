@@ -21,11 +21,24 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   _MapStyle _mapStyle = _MapStyle.street;
 
   static const _hitRadius = 30.0;
+  static const _midHitRadius = 22.0;
   static const _key = AppConstants.maptilerApiKey;
 
   String get _tileUrl => _mapStyle == _MapStyle.street
       ? 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=$_key'
       : 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=$_key';
+
+  static List<LatLng> _midpoints(List<LatLng> latlngs) {
+    if (latlngs.length < 3) return [];
+    return List.generate(latlngs.length, (i) {
+      final a = latlngs[i];
+      final b = latlngs[(i + 1) % latlngs.length];
+      return LatLng(
+        (a.latitude + b.latitude) / 2,
+        (a.longitude + b.longitude) / 2,
+      );
+    });
+  }
 
   @override
   void dispose() {
@@ -35,22 +48,43 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
 
   void _onPointerDown(PointerDownEvent event, List<MapAreaPoint> points) {
     final camera = _mapController.camera;
-    for (int i = 0; i < points.length; i++) {
-      final screen = camera.latLngToScreenOffset(
-        LatLng(points[i].latitude, points[i].longitude),
-      );
+    final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+
+    // Check main vertices first (larger hit area)
+    for (int i = 0; i < latlngs.length; i++) {
+      final screen = camera.latLngToScreenOffset(latlngs[i]);
       if ((screen - event.localPosition).distance < _hitRadius) {
         setState(() => _draggingIndex = i);
+        return;
+      }
+    }
+
+    // Check midpoints — touching one inserts a new vertex there and drags it
+    final mids = _midpoints(latlngs);
+    for (int i = 0; i < mids.length; i++) {
+      final screen = camera.latLngToScreenOffset(mids[i]);
+      if ((screen - event.localPosition).distance < _midHitRadius) {
+        ref
+            .read(mapCalculatorNotifierProvider.notifier)
+            .insertPoint(
+              i,
+              MapAreaPoint(
+                latitude: mids[i].latitude,
+                longitude: mids[i].longitude,
+              ),
+            );
+        setState(() => _draggingIndex = i + 1);
         return;
       }
     }
   }
 
   void _onPointerMove(LatLng latLng) {
-    final idx = _draggingIndex;
-    if (idx == null) return;
-    ref.read(mapCalculatorNotifierProvider.notifier).movePoint(
-          idx,
+    if (_draggingIndex == null) return;
+    ref
+        .read(mapCalculatorNotifierProvider.notifier)
+        .movePoint(
+          _draggingIndex!,
           MapAreaPoint(latitude: latLng.latitude, longitude: latLng.longitude),
         );
   }
@@ -65,6 +99,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+    final mids = _midpoints(latlngs);
 
     return Stack(
       children: [
@@ -85,10 +120,11 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
             onTap: _draggingIndex != null
                 ? null
                 : (_, point) => notifier.addPoint(
-                      MapAreaPoint(
-                          latitude: point.latitude,
-                          longitude: point.longitude),
+                    MapAreaPoint(
+                      latitude: point.latitude,
+                      longitude: point.longitude,
                     ),
+                  ),
             onPointerDown: (event, _) => _onPointerDown(event, points),
             onPointerMove: (_, latLng) => _onPointerMove(latLng),
             onPointerUp: (_, __) => _onPointerUp(),
@@ -122,15 +158,35 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                   ),
                 ],
               ),
+            // Midpoint markers (smaller circles on each edge)
+            if (mids.isNotEmpty)
+              MarkerLayer(
+                markers: List.generate(mids.length, (i) {
+                  // final isDragging = _draggingIndex == i;
+                  return Marker(
+                    point: mids[i],
+                    width: 12,
+                    height: 12,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withAlpha(160),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                    ),
+                  );
+                }),
+              ),
+            // Main vertex markers
             MarkerLayer(
               markers: List.generate(latlngs.length, (i) {
                 final isDragging = _draggingIndex == i;
                 return Marker(
                   point: latlngs[i],
-                  width: isDragging ? 38 : 28,
-                  height: isDragging ? 38 : 28,
+                  width: isDragging ? 22 : 18,
+                  height: isDragging ? 22 : 18,
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 120),
+                    duration: Duration(milliseconds: isDragging ? 0 : 120),
                     decoration: BoxDecoration(
                       color: isDragging
                           ? colorScheme.secondary
@@ -139,10 +195,11 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                       border: Border.all(color: Colors.white, width: 2.5),
                       boxShadow: [
                         BoxShadow(
-                          color: (isDragging
-                                  ? colorScheme.secondary
-                                  : colorScheme.primary)
-                              .withAlpha(isDragging ? 130 : 80),
+                          color:
+                              (isDragging
+                                      ? colorScheme.secondary
+                                      : colorScheme.primary)
+                                  .withAlpha(isDragging ? 130 : 80),
                           blurRadius: isDragging ? 12 : 5,
                           spreadRadius: isDragging ? 3 : 1,
                         ),
@@ -187,25 +244,33 @@ class _MapStyleButton extends StatelessWidget {
       items: [
         PopupMenuItem(
           value: _MapStyle.street,
-          child: Row(children: [
-            Icon(Icons.map_outlined,
+          child: Row(
+            children: [
+              Icon(
+                Icons.map_outlined,
                 size: 18,
-                color: current == _MapStyle.street ? colorScheme.primary : null),
-            const SizedBox(width: 8),
-            const Text('Street'),
-          ]),
+                color: current == _MapStyle.street ? colorScheme.primary : null,
+              ),
+              const SizedBox(width: 8),
+              const Text('Street'),
+            ],
+          ),
         ),
         PopupMenuItem(
           value: _MapStyle.satellite,
-          child: Row(children: [
-            Icon(Icons.satellite_alt,
+          child: Row(
+            children: [
+              Icon(
+                Icons.satellite_alt,
                 size: 18,
                 color: current == _MapStyle.satellite
                     ? colorScheme.primary
-                    : null),
-            const SizedBox(width: 8),
-            const Text('Satellite'),
-          ]),
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              const Text('Satellite'),
+            ],
+          ),
         ),
       ],
     );

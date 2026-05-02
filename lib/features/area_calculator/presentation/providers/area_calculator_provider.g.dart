@@ -7,7 +7,7 @@ part of 'area_calculator_provider.dart';
 // **************************************************************************
 
 String _$areaCalculatorNotifierHash() =>
-    r'e82f8b046d6d7939de3ae1c5f01ddd3ff58ad122';
+    r'49992519d296287e4b047f25a7f4782ba287f57f';
 
 /// See also [AreaCalculatorNotifier].
 @ProviderFor(AreaCalculatorNotifier)

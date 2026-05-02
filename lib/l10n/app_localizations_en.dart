@@ -320,6 +320,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get allUnitsLabel => 'All Units';
 
   @override
+  String get details => 'Details';
+
+  @override
+  String get dimensions => 'Dimensions';
+
+  @override
+  String get dateCreated => 'Date';
+
+  @override
+  String get allAreaValues => 'All Measurements';
+
+  @override
   String get account => 'Account';
 
   @override

@@ -33,6 +33,7 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   MapCalculatorState build() => const MapCalculatorState();
 
   void addPoint(MapAreaPoint point) {
+    if (state.points.length >= 3) return;
     final updated = [...state.points, point];
     final area = _useCase(updated);
     state = state.copyWith(points: updated, areaInSqFt: area);
@@ -48,6 +49,12 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   void movePoint(int index, MapAreaPoint newPoint) {
     if (index < 0 || index >= state.points.length) return;
     final updated = List<MapAreaPoint>.from(state.points)..[index] = newPoint;
+    state = state.copyWith(points: updated, areaInSqFt: _useCase(updated));
+  }
+
+  void insertPoint(int afterIndex, MapAreaPoint point) {
+    final updated = List<MapAreaPoint>.from(state.points)
+      ..insert(afterIndex + 1, point);
     state = state.copyWith(points: updated, areaInSqFt: _useCase(updated));
   }
 
@@ -82,6 +89,9 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
         displayUnit: state.displayUnit,
         createdAt: DateTime.now(),
         mapPointCount: state.points.length,
+        mapPoints: state.points
+            .expand((p) => [p.latitude, p.longitude])
+            .toList(),
       );
       final boxes = await ref.read(hiveBoxesProvider.future);
       final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));

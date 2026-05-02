@@ -1,5 +1,7 @@
 import 'package:area_and_plot/core/widgets/app_drawer.dart';
 import 'package:area_and_plot/features/area_calculator/presentation/screens/area_calculator_screen.dart';
+import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
+import 'package:area_and_plot/features/history/presentation/screens/history_detail_screen.dart';
 import 'package:area_and_plot/features/history/presentation/screens/history_screen.dart';
 import 'package:area_and_plot/features/home/presentation/screens/home_screen.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/screens/map_calculator_screen.dart';
@@ -34,8 +36,17 @@ final appRouter = GoRouter(
         ]),
         StatefulShellBranch(routes: [
           GoRoute(
-              path: '/history',
-              builder: (_, __) => const HistoryScreen()),
+            path: '/history',
+            builder: (_, __) => const HistoryScreen(),
+            routes: [
+              GoRoute(
+                path: 'detail',
+                builder: (_, state) => HistoryDetailScreen(
+                  entry: state.extra as HistoryEntry,
+                ),
+              ),
+            ],
+          ),
         ]),
       ],
     ),

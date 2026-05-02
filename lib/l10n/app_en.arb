@@ -132,6 +132,11 @@
   "saveResult": "Save to History",
   "allUnitsLabel": "All Units",
 
+  "details": "Details",
+  "dimensions": "Dimensions",
+  "dateCreated": "Date",
+  "allAreaValues": "All Measurements",
+
   "account": "Account",
   "signInWithGoogle": "Sign in with Google",
   "signOut": "Sign out"

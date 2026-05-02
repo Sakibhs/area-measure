@@ -7,6 +7,7 @@ import 'package:area_and_plot/features/history/presentation/providers/history_pr
 import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class HistoryScreen extends ConsumerStatefulWidget {
@@ -81,6 +82,7 @@ class _HistoryList extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(height: 8),
             itemBuilder: (context, i) => _HistoryCard(
               entry: entries[i],
+              onTap: () => context.push('/history/detail', extra: entries[i]),
               onDelete: () => _confirmDelete(context, ref, entries[i].id),
               onToggleFavorite: () => ref
                   .read(historyNotifierProvider.notifier)
@@ -120,11 +122,13 @@ class _HistoryList extends ConsumerWidget {
 class _HistoryCard extends StatelessWidget {
   const _HistoryCard({
     required this.entry,
+    required this.onTap,
     required this.onDelete,
     required this.onToggleFavorite,
   });
 
   final HistoryEntry entry;
+  final VoidCallback onTap;
   final VoidCallback onDelete;
   final VoidCallback onToggleFavorite;
 
@@ -145,7 +149,10 @@ class _HistoryCard extends StatelessWidget {
         '${NumberFormatter.format(areaValue)} ${entry.displayUnit.label(l.localeName)}';
 
     return Card(
-      child: Padding(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
@@ -206,6 +213,7 @@ class _HistoryCard extends StatelessWidget {
               onPressed: onDelete,
             ),
           ],
+        ),
         ),
       ),
     );

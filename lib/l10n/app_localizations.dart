@@ -704,6 +704,30 @@ abstract class AppLocalizations {
   /// **'All Units'**
   String get allUnitsLabel;
 
+  /// No description provided for @details.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get details;
+
+  /// No description provided for @dimensions.
+  ///
+  /// In en, this message translates to:
+  /// **'Dimensions'**
+  String get dimensions;
+
+  /// No description provided for @dateCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get dateCreated;
+
+  /// No description provided for @allAreaValues.
+  ///
+  /// In en, this message translates to:
+  /// **'All Measurements'**
+  String get allAreaValues;
+
   /// No description provided for @account.
   ///
   /// In en, this message translates to:
