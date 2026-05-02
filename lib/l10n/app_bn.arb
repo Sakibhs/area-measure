@@ -128,5 +128,9 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "saveResult": "ইতিহাসে সংরক্ষণ",
-  "allUnitsLabel": "সব এককে"
+  "allUnitsLabel": "সব এককে",
+
+  "account": "অ্যাকাউন্ট",
+  "signInWithGoogle": "গুগল দিয়ে সাইন ইন করুন",
+  "signOut": "সাইন আউট"
 }

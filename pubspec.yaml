@@ -27,6 +27,11 @@ dependencies:
   # Offline Database
   hive_flutter: any
 
+  # Firebase & Auth
+  firebase_core: any
+  firebase_auth: any
+  google_sign_in: any
+
   # Maps
   flutter_map: any
   latlong2: any

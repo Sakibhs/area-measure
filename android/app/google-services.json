@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1041265387467",
+    "project_id": "area-and-plots",
+    "storage_bucket": "area-and-plots.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041265387467:android:f796b78bdf3806c2a5384e",
+        "android_client_info": {
+          "package_name": "net.appcolors.area_and_plot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041265387467-51756b1jjj1hs3s6kfjucp1p2bvo0gen.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.appcolors.area_and_plot",
+            "certificate_hash": "f8f4c4f7963fbfc0b4f2e955ffa722babb2243f2"
+          }
+        },
+        {
+          "client_id": "1041265387467-u47re5h14iokbqhfgfddoc7hiaqp7h42.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA9kFyURbsc1mmZdDWN4EvS4LHtGAv-d4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041265387467-u47re5h14iokbqhfgfddoc7hiaqp7h42.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

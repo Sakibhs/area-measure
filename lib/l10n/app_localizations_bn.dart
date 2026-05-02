@@ -318,4 +318,13 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get allUnitsLabel => 'সব এককে';
+
+  @override
+  String get account => 'অ্যাকাউন্ট';
+
+  @override
+  String get signInWithGoogle => 'গুগল দিয়ে সাইন ইন করুন';
+
+  @override
+  String get signOut => 'সাইন আউট';
 }

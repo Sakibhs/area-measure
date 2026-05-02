@@ -18,3 +18,10 @@ class PermissionException implements Exception {
   @override
   String toString() => 'PermissionException: $message';
 }
+
+class AuthException implements Exception {
+  const AuthException([this.message = 'Authentication error']);
+  final String message;
+  @override
+  String toString() => message;
+}

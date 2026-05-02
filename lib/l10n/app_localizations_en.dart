@@ -318,4 +318,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get allUnitsLabel => 'All Units';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get signInWithGoogle => 'Sign in with Google';
+
+  @override
+  String get signOut => 'Sign out';
 }

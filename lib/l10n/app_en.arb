@@ -130,5 +130,9 @@
     "placeholders": { "count": { "type": "int" } }
   },
   "saveResult": "Save to History",
-  "allUnitsLabel": "All Units"
+  "allUnitsLabel": "All Units",
+
+  "account": "Account",
+  "signInWithGoogle": "Sign in with Google",
+  "signOut": "Sign out"
 }
