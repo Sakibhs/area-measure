@@ -7,6 +7,7 @@ import 'package:area_and_plot/core/utils/number_formatter.dart';
 import 'package:area_and_plot/features/area_calculator/domain/entities/area_calculation.dart';
 import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
 import 'package:area_and_plot/features/history/presentation/providers/history_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/providers/map_style_provider.dart';
 import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -21,7 +22,8 @@ class HistoryDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final live = ref
+    final live =
+        ref
             .watch(historyNotifierProvider)
             .valueOrNull
             ?.firstWhere((e) => e.id == entry.id, orElse: () => entry) ??
@@ -32,7 +34,8 @@ class HistoryDetailScreen extends ConsumerWidget {
     final isMap = live.type == HistoryType.mapCalculator;
     final color = isMap ? cs.tertiary : cs.primary;
     final allValues = AreaConverter.convertToAll(live.areaInSqFt);
-    final title = live.label ??
+    final title =
+        live.label ??
         (isMap
             ? l.mapCalculator
             : live.shape?.label(l.localeName) ?? l.areaCalculator);
@@ -86,12 +89,15 @@ class HistoryDetailScreen extends ConsumerWidget {
                           unit.label(l.localeName),
                           style: isPrimary
                               ? TextStyle(
-                                  fontWeight: FontWeight.bold, color: color)
+                                  fontWeight: FontWeight.bold,
+                                  color: color,
+                                )
                               : null,
                         ),
                         trailing: Text(
                           NumberFormatter.format(val),
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(
                                 fontWeight: isPrimary
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -106,11 +112,7 @@ class HistoryDetailScreen extends ConsumerWidget {
                 if (!isMap && live.dimensions != null) ...[
                   _SectionLabel(l.dimensions),
                   const SizedBox(height: 8),
-                  Card(
-                    child: Column(
-                      children: _buildDimensionTiles(live, l),
-                    ),
-                  ),
+                  Card(child: Column(children: _buildDimensionTiles(live, l))),
                   const SizedBox(height: 16),
                 ],
                 if (isMap && live.mapPointCount != null) ...[
@@ -133,10 +135,14 @@ class HistoryDetailScreen extends ConsumerWidget {
                 Card(
                   child: ListTile(
                     dense: true,
-                    leading: Icon(Icons.calendar_today_outlined,
-                        size: 18, color: cs.onSurfaceVariant),
-                    title: Text(DateFormat('dd MMM yyyy, hh:mm a')
-                        .format(live.createdAt)),
+                    leading: Icon(
+                      Icons.calendar_today_outlined,
+                      size: 18,
+                      color: cs.onSurfaceVariant,
+                    ),
+                    title: Text(
+                      DateFormat('dd MMM yyyy, hh:mm a').format(live.createdAt),
+                    ),
                   ),
                 ),
               ],
@@ -176,13 +182,16 @@ class HistoryDetailScreen extends ConsumerWidget {
   }
 
   Widget _dimTile(String label, double value) => ListTile(
-        dense: true,
-        title: Text(label),
-        trailing: Text('${NumberFormatter.format(value)} ft'),
-      );
+    dense: true,
+    title: Text(label),
+    trailing: Text('${NumberFormatter.format(value)} ft'),
+  );
 
   Future<void> _confirmDelete(
-      BuildContext context, WidgetRef ref, AppLocalizations l) async {
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -190,11 +199,13 @@ class HistoryDetailScreen extends ConsumerWidget {
         content: Text(l.deleteConfirmMessage),
         actions: [
           TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(l.cancel)),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l.cancel),
+          ),
           FilledButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(l.delete)),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l.delete),
+          ),
         ],
       ),
     );
@@ -205,14 +216,14 @@ class HistoryDetailScreen extends ConsumerWidget {
   }
 }
 
-class _MapHeader extends StatelessWidget {
+class _MapHeader extends ConsumerWidget {
   const _MapHeader({required this.live, required this.cs});
 
   final HistoryEntry live;
   final ColorScheme cs;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final raw = live.mapPoints;
     final latlngs = <LatLng>[];
     if (raw != null) {
@@ -221,7 +232,8 @@ class _MapHeader extends StatelessWidget {
       }
     }
 
-    const key = AppConstants.maptilerApiKey;
+    final mapStyle =
+        ref.watch(mapStyleNotifierProvider).valueOrNull ?? MapStyle.satellite;
 
     final cameraFit = latlngs.length >= 2
         ? CameraFit.coordinates(
@@ -230,23 +242,27 @@ class _MapHeader extends StatelessWidget {
           )
         : CameraFit.bounds(
             bounds: LatLngBounds(
-              const LatLng(AppConstants.defaultMapLatitude - 0.01,
-                  AppConstants.defaultMapLongitude - 0.01),
-              const LatLng(AppConstants.defaultMapLatitude + 0.01,
-                  AppConstants.defaultMapLongitude + 0.01),
+              const LatLng(
+                AppConstants.defaultMapLatitude - 0.01,
+                AppConstants.defaultMapLongitude - 0.01,
+              ),
+              const LatLng(
+                AppConstants.defaultMapLatitude + 0.01,
+                AppConstants.defaultMapLongitude + 0.01,
+              ),
             ),
           );
 
     return FlutterMap(
       options: MapOptions(
         initialCameraFit: cameraFit,
-        interactionOptions:
-            const InteractionOptions(flags: InteractiveFlag.none),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.none,
+        ),
       ),
       children: [
         TileLayer(
-          urlTemplate:
-              'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=$key',
+          urlTemplate: mapTileUrl(mapStyle),
           maxZoom: 22,
           userAgentPackageName: 'net.appcolors.area_and_plot',
         ),
@@ -264,18 +280,20 @@ class _MapHeader extends StatelessWidget {
         if (latlngs.isNotEmpty)
           MarkerLayer(
             markers: latlngs
-                .map((p) => Marker(
-                      point: p,
-                      width: 10,
-                      height: 10,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: cs.primary,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 1.5),
-                        ),
+                .map(
+                  (p) => Marker(
+                    point: p,
+                    width: 10,
+                    height: 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: cs.primary,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
                       ),
-                    ))
+                    ),
+                  ),
+                )
                 .toList(),
           ),
       ],
@@ -289,11 +307,11 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Text(
-        label,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-      );
+    label,
+    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    ),
+  );
 }
 
 class _ShapePainter extends CustomPainter {
@@ -330,9 +348,13 @@ class _ShapePainter extends CustomPainter {
         }
         final rw = ratio >= 1 ? r : r * ratio;
         final rh = ratio >= 1 ? r / ratio : r;
-        return Path()
-          ..addRect(Rect.fromCenter(
-              center: Offset(cx, cy), width: rw * 2.4, height: rh * 2.4));
+        return Path()..addRect(
+          Rect.fromCenter(
+            center: Offset(cx, cy),
+            width: rw * 2.4,
+            height: rh * 2.4,
+          ),
+        );
 
       case AreaShape.triangle:
         return Path()

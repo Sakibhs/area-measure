@@ -6,7 +6,7 @@ part of 'history_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$historyNotifierHash() => r'df8f7909916bfa8def4f72bb955fb40bc1b9e5db';
+String _$historyNotifierHash() => r'b8ea00b230ec6a915eb5f5a09fe97f683df5ed6d';
 
 /// See also [HistoryNotifier].
 @ProviderFor(HistoryNotifier)
@@ -22,7 +22,7 @@ final historyNotifierProvider = AutoDisposeAsyncNotifierProvider<
 );
 
 typedef _$HistoryNotifier = AutoDisposeAsyncNotifier<List<HistoryEntry>>;
-String _$favoritesNotifierHash() => r'48662f0d5ccf4c62acb7cd345f0c9c792bececb1';
+String _$favoritesNotifierHash() => r'0d6c5e6a929e0c22f8d7f1fc13c54fb8883e9273';
 
 /// See also [FavoritesNotifier].
 @ProviderFor(FavoritesNotifier)

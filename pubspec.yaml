@@ -30,6 +30,7 @@ dependencies:
   # Firebase & Auth
   firebase_core: any
   firebase_auth: any
+  cloud_firestore: any
   google_sign_in: ^6.2.1
 
   # Maps
@@ -43,6 +44,7 @@ dependencies:
   cupertino_icons: any
   intl: any
   uuid: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:

@@ -75,7 +75,7 @@ class _HistoryList extends ConsumerWidget {
       data: (entries) {
         if (entries.isEmpty) return const _EmptyState();
         return RefreshIndicator(
-          onRefresh: () async => ref.invalidate(historyNotifierProvider),
+          onRefresh: () => ref.read(historyNotifierProvider.notifier).sync(),
           child: ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: entries.length,

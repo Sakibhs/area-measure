@@ -1,27 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'map_calculator_provider.dart';
+part of 'map_style_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapCalculatorNotifierHash() =>
-    r'648d6eec6bb17060a33ce1ebb7074c8a9b09de4d';
+String _$mapStyleNotifierHash() => r'665465b6a0f4c844686183ba2ed21c4f365057d7';
 
-/// See also [MapCalculatorNotifier].
-@ProviderFor(MapCalculatorNotifier)
-final mapCalculatorNotifierProvider = AutoDisposeNotifierProvider<
-    MapCalculatorNotifier, MapCalculatorState>.internal(
-  MapCalculatorNotifier.new,
-  name: r'mapCalculatorNotifierProvider',
+/// See also [MapStyleNotifier].
+@ProviderFor(MapStyleNotifier)
+final mapStyleNotifierProvider =
+    AsyncNotifierProvider<MapStyleNotifier, MapStyle>.internal(
+  MapStyleNotifier.new,
+  name: r'mapStyleNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$mapCalculatorNotifierHash,
+      : _$mapStyleNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$MapCalculatorNotifier = AutoDisposeNotifier<MapCalculatorState>;
+typedef _$MapStyleNotifier = AsyncNotifier<MapStyle>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

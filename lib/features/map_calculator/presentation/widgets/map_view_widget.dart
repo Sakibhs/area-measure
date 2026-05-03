@@ -1,12 +1,11 @@
 import 'package:area_and_plot/core/constants/app_constants.dart';
 import 'package:area_and_plot/features/map_calculator/domain/entities/map_area_point.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/providers/map_style_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-
-enum _MapStyle { street, satellite }
 
 class MapViewWidget extends ConsumerStatefulWidget {
   const MapViewWidget({super.key});
@@ -18,13 +17,12 @@ class MapViewWidget extends ConsumerStatefulWidget {
 class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   final _mapController = MapController();
   int? _draggingIndex;
-  _MapStyle _mapStyle = _MapStyle.street;
 
   static const _hitRadius = 30.0;
   static const _midHitRadius = 22.0;
   static const _key = AppConstants.maptilerApiKey;
 
-  String get _tileUrl => _mapStyle == _MapStyle.street
+  String _tileUrl(MapStyle style) => style == MapStyle.street
       ? 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=$_key'
       : 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=$_key';
 
@@ -98,6 +96,9 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     final points = ref.watch(mapCalculatorNotifierProvider).points;
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
+    final mapStyle = ref
+        .watch(mapStyleNotifierProvider)
+        .valueOrNull ?? MapStyle.satellite;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
     final mids = _midpoints(latlngs);
 
@@ -132,7 +133,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
           ),
           children: [
             TileLayer(
-              urlTemplate: _tileUrl,
+              urlTemplate: _tileUrl(mapStyle),
               maxZoom: 22,
               maxNativeZoom: 22,
               userAgentPackageName: 'net.appcolors.area_and_plot',
@@ -214,9 +215,11 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
         Positioned(
           top: 56,
           right: 12,
-          child: _MapStyleButton(
-            current: _mapStyle,
-            onSelected: (style) => setState(() => _mapStyle = style),
+          child: MapStyleButton(
+            current: mapStyle,
+            onSelected: (style) => ref
+                .read(mapStyleNotifierProvider.notifier)
+                .setStyle(style),
           ),
         ),
       ],
@@ -224,16 +227,16 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   }
 }
 
-class _MapStyleButton extends StatelessWidget {
-  const _MapStyleButton({required this.current, required this.onSelected});
+class MapStyleButton extends StatelessWidget {
+  const MapStyleButton({required this.current, required this.onSelected});
 
-  final _MapStyle current;
-  final ValueChanged<_MapStyle> onSelected;
+  final MapStyle current;
+  final ValueChanged<MapStyle> onSelected;
 
   Future<void> _showMenu(BuildContext context, Offset tapPosition) async {
     final colorScheme = Theme.of(context).colorScheme;
     final screenSize = MediaQuery.of(context).size;
-    final result = await showMenu<_MapStyle>(
+    final result = await showMenu<MapStyle>(
       context: context,
       position: RelativeRect.fromLTRB(
         tapPosition.dx,
@@ -243,13 +246,13 @@ class _MapStyleButton extends StatelessWidget {
       ),
       items: [
         PopupMenuItem(
-          value: _MapStyle.street,
+          value: MapStyle.street,
           child: Row(
             children: [
               Icon(
                 Icons.map_outlined,
                 size: 18,
-                color: current == _MapStyle.street ? colorScheme.primary : null,
+                color: current == MapStyle.street ? colorScheme.primary : null,
               ),
               const SizedBox(width: 8),
               const Text('Street'),
@@ -257,13 +260,13 @@ class _MapStyleButton extends StatelessWidget {
           ),
         ),
         PopupMenuItem(
-          value: _MapStyle.satellite,
+          value: MapStyle.satellite,
           child: Row(
             children: [
               Icon(
                 Icons.satellite_alt,
                 size: 18,
-                color: current == _MapStyle.satellite
+                color: current == MapStyle.satellite
                     ? colorScheme.primary
                     : null,
               ),

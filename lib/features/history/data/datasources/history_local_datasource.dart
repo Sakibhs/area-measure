@@ -9,6 +9,7 @@ abstract class HistoryLocalDataSource {
   Future<void> save(HistoryEntry entry);
   Future<void> delete(String id);
   Future<void> toggleFavorite(String id, {required bool isFavorite});
+  Future<void> replaceAll(List<HistoryEntry> entries);
 }
 
 class HistoryLocalDataSourceImpl implements HistoryLocalDataSource {
@@ -67,6 +68,19 @@ class HistoryLocalDataSourceImpl implements HistoryLocalDataSource {
       await _box.put(id, model);
     } catch (e) {
       throw CacheException('Failed to toggle favorite: $e');
+    }
+  }
+
+  @override
+  Future<void> replaceAll(List<HistoryEntry> entries) async {
+    try {
+      await _box.clear();
+      final map = {
+        for (final e in entries) e.id: HistoryEntryHiveModel.fromDomain(e),
+      };
+      await _box.putAll(map);
+    } catch (e) {
+      throw CacheException('Failed to replace history: $e');
     }
   }
 }

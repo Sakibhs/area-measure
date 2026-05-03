@@ -2,10 +2,13 @@ import 'package:area_and_plot/core/constants/unit_constants.dart';
 import 'package:area_and_plot/core/di/hive_provider.dart';
 import 'package:area_and_plot/core/utils/area_converter.dart';
 import 'package:area_and_plot/features/history/data/datasources/history_local_datasource.dart';
+import 'package:area_and_plot/features/history/data/datasources/history_remote_datasource.dart';
 import 'package:area_and_plot/features/history/data/repositories/history_repository_impl.dart';
 import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
 import 'package:area_and_plot/features/map_calculator/domain/entities/map_area_point.dart';
 import 'package:area_and_plot/features/map_calculator/domain/usecases/calculate_polygon_area_usecase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
@@ -97,7 +100,12 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
             .toList(),
       );
       final boxes = await ref.read(hiveBoxesProvider.future);
-      final repo = HistoryRepositoryImpl(HistoryLocalDataSourceImpl(boxes.historyEntries));
+      final local = HistoryLocalDataSourceImpl(boxes.historyEntries);
+      final remote = HistoryRemoteDataSourceImpl(
+        FirebaseFirestore.instance,
+        FirebaseAuth.instance,
+      );
+      final repo = HistoryRepositoryImpl(local, remote);
       await repo.save(entry);
     } catch (_) {
       state = state.copyWith(errorMessage: 'সংরক্ষণ ব্যর্থ হয়েছে');
