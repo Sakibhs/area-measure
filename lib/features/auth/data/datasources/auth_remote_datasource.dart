@@ -35,7 +35,21 @@ class FirebaseAuthDataSourceImpl implements AuthRemoteDataSource {
 
       final result = await _auth.signInWithCredential(credential);
       if (result.user == null) throw const AuthException('Sign in failed');
-      return _map(result.user!);
+
+      final firebaseUser = result.user!;
+      if (firebaseUser.displayName == null && googleUser.displayName != null) {
+        await firebaseUser.updateDisplayName(googleUser.displayName);
+      }
+      if (firebaseUser.photoURL == null && googleUser.photoUrl != null) {
+        await firebaseUser.updatePhotoURL(googleUser.photoUrl);
+      }
+
+      return AppUser(
+        uid: firebaseUser.uid,
+        email: firebaseUser.email ?? '',
+        displayName: firebaseUser.displayName ?? googleUser.displayName,
+        photoUrl: firebaseUser.photoURL ?? googleUser.photoUrl,
+      );
     } on AuthException {
       rethrow;
     } on FirebaseAuthException catch (e, st) {

@@ -101,7 +101,7 @@
   "errorSaveFailed": "Failed to save calculation",
   "permissionDenied": "Location permission is required for map features",
 
-  "bangladeshUnits": "Bangladesh Standard",
+  "bangladeshUnits": "Common Land Units",
   "kathaInfo": "1 Katha = 720 sq ft",
   "bighaInfo": "1 Bigha = 20 Katha = 14,400 sq ft",
   "decimalInfo": "1 Decimal = 435.56 sq ft",
@@ -141,5 +141,7 @@
 
   "account": "Account",
   "signInWithGoogle": "Sign in with Google",
-  "signOut": "Sign out"
+  "signOut": "Sign out",
+  "signIn": "Sign In",
+  "loginToSyncText": "Login to sync app data online"
 }

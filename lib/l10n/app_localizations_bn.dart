@@ -243,7 +243,7 @@ class AppLocalizationsBn extends AppLocalizations {
       'মানচিত্র ব্যবহারের জন্য অবস্থান অনুমতি প্রয়োজন';
 
   @override
-  String get bangladeshUnits => 'বাংলাদেশ মান';
+  String get bangladeshUnits => 'প্রচলিত জমির একক';
 
   @override
   String get kathaInfo => '১ কাঠা = ৭২০ বর্গফুট';
@@ -345,4 +345,10 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get signOut => 'সাইন আউট';
+
+  @override
+  String get signIn => 'সাইন ইন';
+
+  @override
+  String get loginToSyncText => 'অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন';
 }

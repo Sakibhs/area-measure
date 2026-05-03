@@ -557,7 +557,7 @@ abstract class AppLocalizations {
   /// No description provided for @bangladeshUnits.
   ///
   /// In en, this message translates to:
-  /// **'Bangladesh Standard'**
+  /// **'Common Land Units'**
   String get bangladeshUnits;
 
   /// No description provided for @kathaInfo.
@@ -757,6 +757,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign out'**
   String get signOut;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @loginToSyncText.
+  ///
+  /// In en, this message translates to:
+  /// **'Login to sync app data online'**
+  String get loginToSyncText;
 }
 
 class _AppLocalizationsDelegate

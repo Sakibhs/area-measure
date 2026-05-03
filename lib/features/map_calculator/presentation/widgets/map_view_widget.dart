@@ -96,9 +96,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     final points = ref.watch(mapCalculatorNotifierProvider).points;
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
-    final mapStyle = ref
-        .watch(mapStyleNotifierProvider)
-        .valueOrNull ?? MapStyle.satellite;
+    final mapStyle =
+        ref.watch(mapStyleNotifierProvider).valueOrNull ?? MapStyle.satellite;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
     final mids = _midpoints(latlngs);
 
@@ -143,8 +142,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                 polygons: [
                   Polygon(
                     points: latlngs,
-                    color: colorScheme.primary.withAlpha(40),
-                    borderColor: colorScheme.primary,
+                    color: Colors.amber.withAlpha(70),
+                    borderColor: Colors.deepPurple.shade900,
                     borderStrokeWidth: 2.5,
                   ),
                 ],
@@ -217,9 +216,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
           right: 12,
           child: MapStyleButton(
             current: mapStyle,
-            onSelected: (style) => ref
-                .read(mapStyleNotifierProvider.notifier)
-                .setStyle(style),
+            onSelected: (style) =>
+                ref.read(mapStyleNotifierProvider.notifier).setStyle(style),
           ),
         ),
       ],

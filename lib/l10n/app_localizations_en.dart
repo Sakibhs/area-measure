@@ -243,7 +243,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Location permission is required for map features';
 
   @override
-  String get bangladeshUnits => 'Bangladesh Standard';
+  String get bangladeshUnits => 'Common Land Units';
 
   @override
   String get kathaInfo => '1 Katha = 720 sq ft';
@@ -345,4 +345,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOut => 'Sign out';
+
+  @override
+  String get signIn => 'Sign In';
+
+  @override
+  String get loginToSyncText => 'Login to sync app data online';
 }

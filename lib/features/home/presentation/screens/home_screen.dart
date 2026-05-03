@@ -28,8 +28,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _WelcomeBanner(),
-            const SizedBox(height: 24),
             Text(l.features, style: theme.textTheme.titleLarge),
             const SizedBox(height: 12),
             GridView.count(
@@ -88,47 +86,6 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _WelcomeBanner extends StatelessWidget {
-  const _WelcomeBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.primaryLight],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.landscape, color: Colors.white, size: 36),
-          const SizedBox(height: 8),
-          Text(
-            l.welcome,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            l.welcomeSubtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.white70,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _FeatureCard extends StatelessWidget {
   const _FeatureCard({
