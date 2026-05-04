@@ -3,7 +3,7 @@ class AppConstants {
 
   static const String appName = 'জমির হিসাব';
   static const String appNameEn = 'Area & Plot';
-  static const String maptilerApiKey = 'sSMgRgx26WsdNcWZ6zmi';
+  static const String maptilerApiKey = String.fromEnvironment('MAPTILER_API_KEY');
 
   static const double defaultMapZoom = 15.0;
   static const double defaultMapLatitude = 23.8103;
