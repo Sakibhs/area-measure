@@ -138,8 +138,9 @@ class _HistoryCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(entry.createdAt);
 
-    final shapeLabel =
-        entry.shape == null ? l.map : entry.shape!.label(l.localeName);
+    final shapeLabel = entry.shape == null
+        ? (entry.label ?? l.map)
+        : entry.shape!.label(l.localeName);
     final areaValue = AreaConverter.convert(
       value: entry.areaInSqFt,
       from: AreaUnit.squareFeet,
@@ -187,7 +188,7 @@ class _HistoryCard extends StatelessWidget {
                   ),
                   Text(
                     areaDisplay,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),

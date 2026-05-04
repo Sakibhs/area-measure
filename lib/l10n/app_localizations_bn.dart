@@ -351,4 +351,7 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get loginToSyncText => 'অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন';
+
+  @override
+  String get errorPlotNameRequired => 'জমির নাম লিখুন';
 }

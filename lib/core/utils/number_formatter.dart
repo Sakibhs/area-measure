@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 class NumberFormatter {
   NumberFormatter._();
 
-  static final _enFormatter = NumberFormat('#,##0.####', 'en_US');
-  static final _bnFormatter = NumberFormat('#,##0.####', 'bn_BD');
+  static final _enFormatter = NumberFormat('#,##0.##', 'en_US');
+  static final _bnFormatter = NumberFormat('#,##0.##', 'bn_BD');
 
   static String format(double value, {bool bangla = false}) {
     final formatted = bangla

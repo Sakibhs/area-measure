@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "area_and_plot (debug)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=dart_defines.env"]
+    },
+    {
+      "name": "area_and_plot (release)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "toolArgs": ["--dart-define-from-file=dart_defines.env"]
+    }
+  ]
+}

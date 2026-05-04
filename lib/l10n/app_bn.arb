@@ -141,5 +141,6 @@
   "signInWithGoogle": "গুগল দিয়ে সাইন ইন করুন",
   "signOut": "সাইন আউট",
   "signIn": "সাইন ইন",
-  "loginToSyncText": "অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন"
+  "loginToSyncText": "অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন",
+  "errorPlotNameRequired": "জমির নাম লিখুন"
 }

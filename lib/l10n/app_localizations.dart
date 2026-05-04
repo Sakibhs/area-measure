@@ -769,6 +769,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login to sync app data online'**
   String get loginToSyncText;
+
+  /// No description provided for @errorPlotNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter plot name'**
+  String get errorPlotNameRequired;
 }
 
 class _AppLocalizationsDelegate

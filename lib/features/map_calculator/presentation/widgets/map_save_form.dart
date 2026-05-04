@@ -20,6 +20,7 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
   final _notesController = TextEditingController();
   AreaUnit _unit = AreaUnit.squareFeet;
   bool _saving = false;
+  bool _nameError = false;
 
   double get _displayArea => AreaConverter.convert(
         value: widget.areaInSqFt,
@@ -35,11 +36,13 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
   }
 
   Future<void> _save() async {
+    if (_nameController.text.trim().isEmpty) {
+      setState(() => _nameError = true);
+      return;
+    }
     setState(() => _saving = true);
     await ref.read(mapCalculatorNotifierProvider.notifier).saveToHistory(
-          label: _nameController.text.trim().isEmpty
-              ? null
-              : _nameController.text.trim(),
+          label: _nameController.text.trim(),
           notes: _notesController.text.trim().isEmpty
               ? null
               : _notesController.text.trim(),
@@ -73,8 +76,14 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
           const SizedBox(height: 20),
           TextField(
             controller: _nameController,
-            decoration: InputDecoration(labelText: l.plotName),
+            decoration: InputDecoration(
+              labelText: l.plotName,
+              errorText: _nameError ? l.errorPlotNameRequired : null,
+            ),
             textCapitalization: TextCapitalization.words,
+            onChanged: (_) {
+              if (_nameError) setState(() => _nameError = false);
+            },
           ),
           const SizedBox(height: 12),
           Row(

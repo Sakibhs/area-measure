@@ -143,5 +143,6 @@
   "signInWithGoogle": "Sign in with Google",
   "signOut": "Sign out",
   "signIn": "Sign In",
-  "loginToSyncText": "Login to sync app data online"
+  "loginToSyncText": "Login to sync app data online",
+  "errorPlotNameRequired": "Please enter plot name"
 }
