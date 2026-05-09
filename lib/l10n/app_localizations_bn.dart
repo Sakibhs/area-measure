@@ -9,7 +9,7 @@ class AppLocalizationsBn extends AppLocalizations {
   AppLocalizationsBn([String locale = 'bn']) : super(locale);
 
   @override
-  String get appName => 'জমির হিসাব';
+  String get appName => 'জমি মাপজোক';
 
   @override
   String get home => 'হোম';
@@ -27,13 +27,13 @@ class AppLocalizationsBn extends AppLocalizations {
   String get history => 'ইতিহাস';
 
   @override
-  String get areaCalculator => 'ক্ষেত্রফল হিসাবক';
+  String get areaCalculator => 'ক্ষেত্রফল হিসাব';
 
   @override
-  String get mapCalculator => 'মানচিত্র হিসাবক';
+  String get mapCalculator => 'মানচিত্র হিসাব';
 
   @override
-  String get unitConverter => 'একক রূপান্তরকারী';
+  String get unitConverter => 'একক রূপান্তর';
 
   @override
   String get calculationHistory => 'হিসাবের ইতিহাস';
@@ -206,19 +206,19 @@ class AppLocalizationsBn extends AppLocalizations {
   String get deleteConfirmMessage => 'এই হিসাবটি মুছে ফেলতে চান?';
 
   @override
-  String get featureAreaCalculator => 'ক্ষেত্রফল হিসাবক';
+  String get featureAreaCalculator => 'ক্ষেত্রফল হিসাব';
 
   @override
   String get featureAreaCalculatorDesc => 'যেকোনো আকৃতির ক্ষেত্রফল';
 
   @override
-  String get featureMapCalculator => 'মানচিত্র হিসাবক';
+  String get featureMapCalculator => 'মানচিত্র হিসাব';
 
   @override
   String get featureMapCalculatorDesc => 'মানচিত্রে এঁকে জমি মাপুন';
 
   @override
-  String get featureUnitConverter => 'একক রূপান্তরকারী';
+  String get featureUnitConverter => 'একক রূপান্তর';
 
   @override
   String get featureUnitConverterDesc => 'জমির একক পরিবর্তন করুন';

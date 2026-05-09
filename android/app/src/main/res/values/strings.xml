@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">জমির হিসাব</string>
+    <string name="app_name">জমি মাপজোক</string>
     <!-- Replace with your Mapbox PUBLIC token (starts with pk.) -->
     <string name="mapbox_access_token" translatable="false">YOUR_MAPBOX_PUBLIC_TOKEN</string>
 </resources>
