@@ -154,7 +154,14 @@ class _QuickReferenceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final items = [l.kathaInfo, l.bighaInfo, l.decimalInfo, l.acreInfo];
+    final bdItems = [l.kathaInfo, l.bighaInfo, l.decimalInfo, l.acreInfo];
+    final intlItems = [
+      l.squareMeterInfo,
+      l.hectareInfo,
+      l.squareKilometerInfo,
+      l.squareYardInfo,
+    ];
+    final titleStyle = Theme.of(context).textTheme.titleMedium;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -165,12 +172,26 @@ class _QuickReferenceCard extends StatelessWidget {
               children: [
                 const Icon(Icons.info_outline, size: 18),
                 const SizedBox(width: 8),
-                Text(l.bangladeshUnits,
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(l.bangladeshUnits, style: titleStyle),
               ],
             ),
             const Divider(height: 16),
-            ...items.map(
+            ...bdItems.map(
+              (info) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3),
+                child: Text('• $info'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Icon(Icons.public, size: 18),
+                const SizedBox(width: 8),
+                Text(l.internationalUnits, style: titleStyle),
+              ],
+            ),
+            const Divider(height: 16),
+            ...intlItems.map(
               (info) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Text('• $info'),
@@ -197,6 +218,9 @@ class _UnitsInfoSheet extends StatelessWidget {
         children: [
           Text(l.unitsInfo, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
+          Text(l.bangladeshUnits,
+              style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
           Text('• ${l.kathaInfo}'),
           const SizedBox(height: 8),
           Text('• ${l.bighaInfo}'),
@@ -204,6 +228,17 @@ class _UnitsInfoSheet extends StatelessWidget {
           Text('• ${l.decimalInfo}'),
           const SizedBox(height: 8),
           Text('• ${l.acreInfo}'),
+          const SizedBox(height: 16),
+          Text(l.internationalUnits,
+              style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Text('• ${l.squareMeterInfo}'),
+          const SizedBox(height: 8),
+          Text('• ${l.hectareInfo}'),
+          const SizedBox(height: 8),
+          Text('• ${l.squareKilometerInfo}'),
+          const SizedBox(height: 8),
+          Text('• ${l.squareYardInfo}'),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,

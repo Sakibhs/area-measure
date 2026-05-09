@@ -1,7 +1,11 @@
 import 'package:area_and_plot/core/constants/app_constants.dart';
+import 'package:area_and_plot/features/history/domain/entities/history_entry.dart';
+import 'package:area_and_plot/features/history/presentation/providers/history_provider.dart';
 import 'package:area_and_plot/features/map_calculator/domain/entities/map_area_point.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_style_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_style_button.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/widgets/saved_areas_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -91,15 +95,35 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     if (_draggingIndex != null) setState(() => _draggingIndex = null);
   }
 
+  List<HistoryEntry> _savedMapEntries() {
+    final async = ref.watch(historyNotifierProvider);
+    return async.maybeWhen(
+      data: (list) => list
+          .where(
+            (e) =>
+                e.type == HistoryType.mapCalculator &&
+                (e.mapPoints?.length ?? 0) >= 6,
+          )
+          .toList(),
+      orElse: () => const <HistoryEntry>[],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final points = ref.watch(mapCalculatorNotifierProvider).points;
+    final state = ref.watch(mapCalculatorNotifierProvider);
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final colorScheme = Theme.of(context).colorScheme;
     final mapStyle =
         ref.watch(mapStyleNotifierProvider).valueOrNull ?? MapStyle.satellite;
+    final points = state.points;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
     final mids = _midpoints(latlngs);
+
+    final allSavedEntries = _savedMapEntries();
+    final showSaved = state.showSavedAreas && points.isEmpty;
+    final savedEntries = showSaved ? allSavedEntries : const <HistoryEntry>[];
+    final hasSavedAvailable = allSavedEntries.isNotEmpty;
 
     return Stack(
       children: [
@@ -137,6 +161,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
               maxNativeZoom: 22,
               userAgentPackageName: 'net.appcolors.area_and_plot',
             ),
+            ...SavedAreasOverlay.buildLayers(savedEntries),
             if (latlngs.length >= 3)
               PolygonLayer(
                 polygons: [
@@ -162,7 +187,6 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
             if (mids.isNotEmpty)
               MarkerLayer(
                 markers: List.generate(mids.length, (i) {
-                  // final isDragging = _draggingIndex == i;
                   return Marker(
                     point: mids[i],
                     width: 12,
@@ -214,10 +238,21 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
         Positioned(
           top: 56,
           right: 12,
-          child: MapStyleButton(
-            current: mapStyle,
-            onSelected: (style) =>
-                ref.read(mapStyleNotifierProvider.notifier).setStyle(style),
+          child: Column(
+            children: [
+              MapStyleButton(
+                current: mapStyle,
+                onSelected: (style) =>
+                    ref.read(mapStyleNotifierProvider.notifier).setStyle(style),
+              ),
+              if (hasSavedAvailable) ...[
+                const SizedBox(height: 8),
+                _SavedAreasToggleButton(
+                  showing: state.showSavedAreas,
+                  onTap: notifier.toggleSavedAreas,
+                ),
+              ],
+            ],
           ),
         ),
       ],
@@ -225,64 +260,17 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   }
 }
 
-class MapStyleButton extends StatelessWidget {
-  const MapStyleButton({required this.current, required this.onSelected});
+class _SavedAreasToggleButton extends StatelessWidget {
+  const _SavedAreasToggleButton({required this.showing, required this.onTap});
 
-  final MapStyle current;
-  final ValueChanged<MapStyle> onSelected;
-
-  Future<void> _showMenu(BuildContext context, Offset tapPosition) async {
-    final colorScheme = Theme.of(context).colorScheme;
-    final screenSize = MediaQuery.of(context).size;
-    final result = await showMenu<MapStyle>(
-      context: context,
-      position: RelativeRect.fromLTRB(
-        tapPosition.dx,
-        tapPosition.dy,
-        screenSize.width - tapPosition.dx,
-        screenSize.height - tapPosition.dy,
-      ),
-      items: [
-        PopupMenuItem(
-          value: MapStyle.street,
-          child: Row(
-            children: [
-              Icon(
-                Icons.map_outlined,
-                size: 18,
-                color: current == MapStyle.street ? colorScheme.primary : null,
-              ),
-              const SizedBox(width: 8),
-              const Text('Street'),
-            ],
-          ),
-        ),
-        PopupMenuItem(
-          value: MapStyle.satellite,
-          child: Row(
-            children: [
-              Icon(
-                Icons.satellite_alt,
-                size: 18,
-                color: current == MapStyle.satellite
-                    ? colorScheme.primary
-                    : null,
-              ),
-              const SizedBox(width: 8),
-              const Text('Satellite'),
-            ],
-          ),
-        ),
-      ],
-    );
-    if (result != null) onSelected(result);
-  }
+  final bool showing;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapUp: (details) => _showMenu(context, details.globalPosition),
+      onTap: onTap,
       child: Container(
         width: 36,
         height: 36,
@@ -291,7 +279,11 @@ class MapStyleButton extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
         ),
-        child: const Icon(Icons.more_vert, size: 20, color: Colors.black87),
+        child: Icon(
+          showing ? Icons.layers : Icons.layers_clear,
+          size: 20,
+          color: showing ? Colors.teal.shade700 : Colors.black54,
+        ),
       ),
     );
   }

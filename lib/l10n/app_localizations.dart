@@ -584,6 +584,36 @@ abstract class AppLocalizations {
   /// **'1 Acre = 43,560 sq ft'**
   String get acreInfo;
 
+  /// No description provided for @internationalUnits.
+  ///
+  /// In en, this message translates to:
+  /// **'International Units'**
+  String get internationalUnits;
+
+  /// No description provided for @squareMeterInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Square Meter = 10.76 sq ft'**
+  String get squareMeterInfo;
+
+  /// No description provided for @hectareInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Hectare = 10,000 m² = 2.47 acres'**
+  String get hectareInfo;
+
+  /// No description provided for @squareKilometerInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Square Kilometer = 100 hectares'**
+  String get squareKilometerInfo;
+
+  /// No description provided for @squareYardInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'1 Square Yard = 9 sq ft'**
+  String get squareYardInfo;
+
   /// No description provided for @language.
   ///
   /// In en, this message translates to:

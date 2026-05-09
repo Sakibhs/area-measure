@@ -14,6 +14,7 @@ class MapCalculatorScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context);
     final colorScheme = Theme.of(context).colorScheme;
     final hasArea = state.points.length >= 3;
+    final hasAnyPoint = state.points.isNotEmpty;
 
     return Scaffold(
       body: Stack(
@@ -41,11 +42,27 @@ class MapCalculatorScreen extends ConsumerWidget {
                 ),
               ),
             ),
+          if (hasAnyPoint)
+            Positioned(
+              bottom: 16,
+              left: 16,
+              child: FloatingActionButton(
+                heroTag: 'map_cancel_fab',
+                tooltip: l.clearPoints,
+                backgroundColor: colorScheme.errorContainer,
+                foregroundColor: colorScheme.onErrorContainer,
+                onPressed: () => ref
+                    .read(mapCalculatorNotifierProvider.notifier)
+                    .clearPoints(),
+                child: const Icon(Icons.close),
+              ),
+            ),
           if (hasArea)
             Positioned(
               bottom: 16,
               right: 16,
               child: FloatingActionButton(
+                heroTag: 'map_save_fab',
                 onPressed: () => _openSaveForm(context, state.areaInSqFt),
                 child: const Icon(Icons.save_outlined),
               ),

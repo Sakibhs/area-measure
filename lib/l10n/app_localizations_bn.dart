@@ -258,6 +258,21 @@ class AppLocalizationsBn extends AppLocalizations {
   String get acreInfo => '১ একর = ৪৩,৫৬০ বর্গফুট';
 
   @override
+  String get internationalUnits => 'আন্তর্জাতিক একক';
+
+  @override
+  String get squareMeterInfo => '১ বর্গমিটার = ১০.৭৬ বর্গফুট';
+
+  @override
+  String get hectareInfo => '১ হেক্টর = ১০,০০০ বর্গমিটার = ২.৪৭ একর';
+
+  @override
+  String get squareKilometerInfo => '১ বর্গকিলোমিটার = ১০০ হেক্টর';
+
+  @override
+  String get squareYardInfo => '১ বর্গগজ = ৯ বর্গফুট';
+
+  @override
   String get language => 'ভাষা';
 
   @override

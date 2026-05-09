@@ -258,6 +258,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get acreInfo => '1 Acre = 43,560 sq ft';
 
   @override
+  String get internationalUnits => 'International Units';
+
+  @override
+  String get squareMeterInfo => '1 Square Meter = 10.76 sq ft';
+
+  @override
+  String get hectareInfo => '1 Hectare = 10,000 m² = 2.47 acres';
+
+  @override
+  String get squareKilometerInfo => '1 Square Kilometer = 100 hectares';
+
+  @override
+  String get squareYardInfo => '1 Square Yard = 9 sq ft';
+
+  @override
   String get language => 'Language';
 
   @override

@@ -6,7 +6,7 @@ part of 'map_style_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$mapStyleNotifierHash() => r'665465b6a0f4c844686183ba2ed21c4f365057d7';
+String _$mapStyleNotifierHash() => r'de1e33ca8f514fb868eb3b5edc68b39f1db5bc18';
 
 /// See also [MapStyleNotifier].
 @ProviderFor(MapStyleNotifier)

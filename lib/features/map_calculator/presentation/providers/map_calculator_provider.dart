@@ -23,6 +23,7 @@ class MapCalculatorState with _$MapCalculatorState {
     @Default(0.0) double areaInSqFt,
     @Default(AreaUnit.katha) AreaUnit displayUnit,
     @Default(false) bool isSaving,
+    @Default(true) bool showSavedAreas,
     String? errorMessage,
   }) = _MapCalculatorState;
 }
@@ -62,11 +63,19 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   }
 
   void clearPoints() {
-    state = const MapCalculatorState();
+    state = state.copyWith(
+      points: const [],
+      areaInSqFt: 0.0,
+      errorMessage: null,
+    );
   }
 
   void setDisplayUnit(AreaUnit unit) {
     state = state.copyWith(displayUnit: unit);
+  }
+
+  void toggleSavedAreas() {
+    state = state.copyWith(showSavedAreas: !state.showSavedAreas);
   }
 
   double get displayValue => AreaConverter.convert(
@@ -78,13 +87,14 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   Map<AreaUnit, double> get allValues =>
       AreaConverter.convertToAll(state.areaInSqFt);
 
-  Future<void> saveToHistory({
+  Future<bool> saveToHistory({
     String? label,
     String? notes,
     required AreaUnit displayUnit,
   }) async {
-    if (state.points.length < 3) return;
+    if (state.points.length < 3) return false;
     state = state.copyWith(isSaving: true, errorMessage: null);
+    var success = false;
     try {
       final entry = HistoryEntry(
         id: _uuid.v4(),
@@ -107,10 +117,13 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
       );
       final repo = HistoryRepositoryImpl(local, remote);
       await repo.save(entry);
+      success = true;
     } catch (_) {
       state = state.copyWith(errorMessage: 'সংরক্ষণ ব্যর্থ হয়েছে');
     } finally {
       state = state.copyWith(isSaving: false);
+      if (success) clearPoints();
     }
+    return success;
   }
 }

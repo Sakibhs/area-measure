@@ -105,6 +105,12 @@
   "decimalInfo": "১ ডেসিমাল = ৪৩৫.৫৬ বর্গফুট",
   "acreInfo": "১ একর = ৪৩,৫৬০ বর্গফুট",
 
+  "internationalUnits": "আন্তর্জাতিক একক",
+  "squareMeterInfo": "১ বর্গমিটার = ১০.৭৬ বর্গফুট",
+  "hectareInfo": "১ হেক্টর = ১০,০০০ বর্গমিটার = ২.৪৭ একর",
+  "squareKilometerInfo": "১ বর্গকিলোমিটার = ১০০ হেক্টর",
+  "squareYardInfo": "১ বর্গগজ = ৯ বর্গফুট",
+
   "language": "ভাষা",
   "english": "ইংরেজি",
   "bengali": "বাংলা",
