@@ -150,5 +150,16 @@
   "signOut": "Sign out",
   "signIn": "Sign In",
   "loginToSyncText": "Login to sync app data online",
-  "errorPlotNameRequired": "Please enter plot name"
+  "errorPlotNameRequired": "Please enter plot name",
+
+  "addMeasurement": "Add Measurement",
+  "areaMeasure": "Area Measure",
+  "areaMeasureDesc": "Draw a polygon to measure area",
+  "distanceMeasure": "Distance Measure",
+  "distanceMeasureDesc": "Draw a path to measure distance",
+  "totalDistance": "Total Distance",
+  "distance": "Distance",
+  "tapToAddDistancePoints": "Tap on map to add distance points",
+  "distanceTitle": "Distance Title",
+  "errorDistanceTitleRequired": "Please enter distance title"
 }

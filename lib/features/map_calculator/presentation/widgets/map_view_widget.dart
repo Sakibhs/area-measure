@@ -101,8 +101,9 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
       data: (list) => list
           .where(
             (e) =>
-                e.type == HistoryType.mapCalculator &&
-                (e.mapPoints?.length ?? 0) >= 6,
+                (e.type == HistoryType.mapCalculator ||
+                        e.type == HistoryType.mapDistance) &&
+                (e.mapPoints?.length ?? 0) >= 4,
           )
           .toList(),
       orElse: () => const <HistoryEntry>[],
@@ -124,6 +125,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     final showSaved = state.showSavedAreas && points.isEmpty;
     final savedEntries = showSaved ? allSavedEntries : const <HistoryEntry>[];
     final hasSavedAvailable = allSavedEntries.isNotEmpty;
+
+    final isDistanceMode = state.mode == MeasureMode.distance;
 
     return Stack(
       children: [
@@ -162,7 +165,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
               userAgentPackageName: 'net.appcolors.area_and_plot',
             ),
             ...SavedAreasOverlay.buildLayers(savedEntries),
-            if (latlngs.length >= 3)
+            if (!isDistanceMode && latlngs.length >= 3)
               PolygonLayer(
                 polygons: [
                   Polygon(
@@ -173,7 +176,17 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                   ),
                 ],
               )
-            else if (latlngs.length == 2)
+            else if (isDistanceMode && latlngs.length >= 2)
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: latlngs,
+                    color: Colors.deepPurple.shade900,
+                    strokeWidth: 3.0,
+                  ),
+                ],
+              )
+            else if (!isDistanceMode && latlngs.length == 2)
               PolylineLayer(
                 polylines: [
                   Polyline(
@@ -183,8 +196,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                   ),
                 ],
               ),
-            // Midpoint markers (smaller circles on each edge)
-            if (mids.isNotEmpty)
+            // Midpoint markers (smaller circles on each edge) — only for area polygon
+            if (!isDistanceMode && mids.isNotEmpty)
               MarkerLayer(
                 markers: List.generate(mids.length, (i) {
                   return Marker(

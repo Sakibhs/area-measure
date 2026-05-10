@@ -805,6 +805,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter plot name'**
   String get errorPlotNameRequired;
+
+  /// No description provided for @addMeasurement.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Measurement'**
+  String get addMeasurement;
+
+  /// No description provided for @areaMeasure.
+  ///
+  /// In en, this message translates to:
+  /// **'Area Measure'**
+  String get areaMeasure;
+
+  /// No description provided for @areaMeasureDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a polygon to measure area'**
+  String get areaMeasureDesc;
+
+  /// No description provided for @distanceMeasure.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Measure'**
+  String get distanceMeasure;
+
+  /// No description provided for @distanceMeasureDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw a path to measure distance'**
+  String get distanceMeasureDesc;
+
+  /// No description provided for @totalDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Distance'**
+  String get totalDistance;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @tapToAddDistancePoints.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap on map to add distance points'**
+  String get tapToAddDistancePoints;
+
+  /// No description provided for @distanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance Title'**
+  String get distanceTitle;
+
+  /// No description provided for @errorDistanceTitleRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter distance title'**
+  String get errorDistanceTitleRequired;
 }
 
 class _AppLocalizationsDelegate

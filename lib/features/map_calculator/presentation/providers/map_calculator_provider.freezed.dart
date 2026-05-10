@@ -21,6 +21,7 @@ mixin _$MapCalculatorState {
   AreaUnit get displayUnit => throw _privateConstructorUsedError;
   bool get isSaving => throw _privateConstructorUsedError;
   bool get showSavedAreas => throw _privateConstructorUsedError;
+  MeasureMode? get mode => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -40,6 +41,7 @@ abstract class $MapCalculatorStateCopyWith<$Res> {
       AreaUnit displayUnit,
       bool isSaving,
       bool showSavedAreas,
+      MeasureMode? mode,
       String? errorMessage});
 }
 
@@ -61,6 +63,7 @@ class _$MapCalculatorStateCopyWithImpl<$Res, $Val extends MapCalculatorState>
     Object? displayUnit = null,
     Object? isSaving = null,
     Object? showSavedAreas = null,
+    Object? mode = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(_value.copyWith(
@@ -84,6 +87,10 @@ class _$MapCalculatorStateCopyWithImpl<$Res, $Val extends MapCalculatorState>
           ? _value.showSavedAreas
           : showSavedAreas // ignore: cast_nullable_to_non_nullable
               as bool,
+      mode: freezed == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as MeasureMode?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -106,6 +113,7 @@ abstract class _$$MapCalculatorStateImplCopyWith<$Res>
       AreaUnit displayUnit,
       bool isSaving,
       bool showSavedAreas,
+      MeasureMode? mode,
       String? errorMessage});
 }
 
@@ -125,6 +133,7 @@ class __$$MapCalculatorStateImplCopyWithImpl<$Res>
     Object? displayUnit = null,
     Object? isSaving = null,
     Object? showSavedAreas = null,
+    Object? mode = freezed,
     Object? errorMessage = freezed,
   }) {
     return _then(_$MapCalculatorStateImpl(
@@ -148,6 +157,10 @@ class __$$MapCalculatorStateImplCopyWithImpl<$Res>
           ? _value.showSavedAreas
           : showSavedAreas // ignore: cast_nullable_to_non_nullable
               as bool,
+      mode: freezed == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as MeasureMode?,
       errorMessage: freezed == errorMessage
           ? _value.errorMessage
           : errorMessage // ignore: cast_nullable_to_non_nullable
@@ -165,6 +178,7 @@ class _$MapCalculatorStateImpl implements _MapCalculatorState {
       this.displayUnit = AreaUnit.katha,
       this.isSaving = false,
       this.showSavedAreas = true,
+      this.mode,
       this.errorMessage})
       : _points = points;
 
@@ -190,11 +204,13 @@ class _$MapCalculatorStateImpl implements _MapCalculatorState {
   @JsonKey()
   final bool showSavedAreas;
   @override
+  final MeasureMode? mode;
+  @override
   final String? errorMessage;
 
   @override
   String toString() {
-    return 'MapCalculatorState(points: $points, areaInSqFt: $areaInSqFt, displayUnit: $displayUnit, isSaving: $isSaving, showSavedAreas: $showSavedAreas, errorMessage: $errorMessage)';
+    return 'MapCalculatorState(points: $points, areaInSqFt: $areaInSqFt, displayUnit: $displayUnit, isSaving: $isSaving, showSavedAreas: $showSavedAreas, mode: $mode, errorMessage: $errorMessage)';
   }
 
   @override
@@ -211,6 +227,7 @@ class _$MapCalculatorStateImpl implements _MapCalculatorState {
                 other.isSaving == isSaving) &&
             (identical(other.showSavedAreas, showSavedAreas) ||
                 other.showSavedAreas == showSavedAreas) &&
+            (identical(other.mode, mode) || other.mode == mode) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage));
   }
@@ -223,6 +240,7 @@ class _$MapCalculatorStateImpl implements _MapCalculatorState {
       displayUnit,
       isSaving,
       showSavedAreas,
+      mode,
       errorMessage);
 
   @JsonKey(ignore: true)
@@ -240,6 +258,7 @@ abstract class _MapCalculatorState implements MapCalculatorState {
       final AreaUnit displayUnit,
       final bool isSaving,
       final bool showSavedAreas,
+      final MeasureMode? mode,
       final String? errorMessage}) = _$MapCalculatorStateImpl;
 
   @override
@@ -252,6 +271,8 @@ abstract class _MapCalculatorState implements MapCalculatorState {
   bool get isSaving;
   @override
   bool get showSavedAreas;
+  @override
+  MeasureMode? get mode;
   @override
   String? get errorMessage;
   @override

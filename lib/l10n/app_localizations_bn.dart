@@ -369,4 +369,35 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get errorPlotNameRequired => 'জমির নাম লিখুন';
+
+  @override
+  String get addMeasurement => 'পরিমাপ যোগ করুন';
+
+  @override
+  String get areaMeasure => 'ক্ষেত্রফল পরিমাপ';
+
+  @override
+  String get areaMeasureDesc => 'বহুভুজ এঁকে ক্ষেত্রফল পরিমাপ করুন';
+
+  @override
+  String get distanceMeasure => 'দূরত্ব পরিমাপ';
+
+  @override
+  String get distanceMeasureDesc => 'পথ এঁকে দূরত্ব পরিমাপ করুন';
+
+  @override
+  String get totalDistance => 'মোট দূরত্ব';
+
+  @override
+  String get distance => 'দূরত্ব';
+
+  @override
+  String get tapToAddDistancePoints =>
+      'দূরত্বের বিন্দু যোগ করতে মানচিত্রে ট্যাপ করুন';
+
+  @override
+  String get distanceTitle => 'দূরত্বের নাম';
+
+  @override
+  String get errorDistanceTitleRequired => 'দূরত্বের নাম লিখুন';
 }

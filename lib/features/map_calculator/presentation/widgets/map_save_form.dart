@@ -7,9 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MapSaveForm extends ConsumerStatefulWidget {
-  const MapSaveForm({super.key, required this.areaInSqFt});
+  const MapSaveForm({
+    super.key,
+    required this.mode,
+    required this.areaInSqFt,
+    required this.distanceMeters,
+  });
 
+  final MeasureMode mode;
   final double areaInSqFt;
+  final double distanceMeters;
 
   @override
   ConsumerState<MapSaveForm> createState() => _MapSaveFormState();
@@ -22,11 +29,18 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
   bool _saving = false;
   bool _nameError = false;
 
+  bool get _isDistance => widget.mode == MeasureMode.distance;
+
   double get _displayArea => AreaConverter.convert(
         value: widget.areaInSqFt,
         from: AreaUnit.squareFeet,
         to: _unit,
       );
+
+  String _formatDistance(double m) {
+    if (m >= 1000) return '${(m / 1000).toStringAsFixed(2)} km';
+    return '${m.toStringAsFixed(1)} m';
+  }
 
   @override
   void dispose() {
@@ -46,7 +60,7 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
           notes: _notesController.text.trim().isEmpty
               ? null
               : _notesController.text.trim(),
-          displayUnit: _unit,
+          displayUnit: _isDistance ? AreaUnit.squareMeter : _unit,
         );
     if (mounted) Navigator.pop(context);
   }
@@ -77,8 +91,12 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
           TextField(
             controller: _nameController,
             decoration: InputDecoration(
-              labelText: l.plotName,
-              errorText: _nameError ? l.errorPlotNameRequired : null,
+              labelText: _isDistance ? l.distanceTitle : l.plotName,
+              errorText: _nameError
+                  ? (_isDistance
+                      ? l.errorDistanceTitleRequired
+                      : l.errorPlotNameRequired)
+                  : null,
             ),
             textCapitalization: TextCapitalization.words,
             onChanged: (_) {
@@ -86,40 +104,53 @@ class _MapSaveFormState extends ConsumerState<MapSaveForm> {
             },
           ),
           const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: InputDecorator(
-                  decoration: InputDecoration(
-                    labelText: l.area,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 14),
-                  ),
-                  child: Text(
-                    NumberFormatter.format(_displayArea),
-                    style: Theme.of(context).textTheme.bodyLarge,
+          if (_isDistance)
+            InputDecorator(
+              decoration: InputDecoration(
+                labelText: l.totalDistance,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              ),
+              child: Text(
+                _formatDistance(widget.distanceMeters),
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      labelText: l.area,
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                    ),
+                    child: Text(
+                      NumberFormatter.format(_displayArea),
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              DropdownButtonHideUnderline(
-                child: DropdownButton<AreaUnit>(
-                  value: _unit,
-                  borderRadius: BorderRadius.circular(12),
-                  items: AreaUnit.values
-                      .map((u) => DropdownMenuItem(
-                            value: u,
-                            child: Text(u.label(l.localeName)),
-                          ))
-                      .toList(),
-                  onChanged: (u) {
-                    if (u != null) setState(() => _unit = u);
-                  },
+                const SizedBox(width: 8),
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<AreaUnit>(
+                    value: _unit,
+                    borderRadius: BorderRadius.circular(12),
+                    items: AreaUnit.values
+                        .map((u) => DropdownMenuItem(
+                              value: u,
+                              child: Text(u.label(l.localeName)),
+                            ))
+                        .toList(),
+                    onChanged: (u) {
+                      if (u != null) setState(() => _unit = u);
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
           const SizedBox(height: 12),
           TextField(
             controller: _notesController,

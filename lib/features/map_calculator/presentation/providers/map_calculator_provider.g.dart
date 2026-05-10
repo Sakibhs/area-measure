@@ -7,7 +7,7 @@ part of 'map_calculator_provider.dart';
 // **************************************************************************
 
 String _$mapCalculatorNotifierHash() =>
-    r'648d6eec6bb17060a33ce1ebb7074c8a9b09de4d';
+    r'c34ea2fb70fad42a0b702bcf8d297e79bbb89039';
 
 /// See also [MapCalculatorNotifier].
 @ProviderFor(MapCalculatorNotifier)

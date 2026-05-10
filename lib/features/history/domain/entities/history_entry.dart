@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'history_entry.freezed.dart';
 
-enum HistoryType { areaCalculator, mapCalculator }
+enum HistoryType { areaCalculator, mapCalculator, mapDistance }
 
 @freezed
 class HistoryEntry with _$HistoryEntry {

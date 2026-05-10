@@ -369,4 +369,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorPlotNameRequired => 'Please enter plot name';
+
+  @override
+  String get addMeasurement => 'Add Measurement';
+
+  @override
+  String get areaMeasure => 'Area Measure';
+
+  @override
+  String get areaMeasureDesc => 'Draw a polygon to measure area';
+
+  @override
+  String get distanceMeasure => 'Distance Measure';
+
+  @override
+  String get distanceMeasureDesc => 'Draw a path to measure distance';
+
+  @override
+  String get totalDistance => 'Total Distance';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get tapToAddDistancePoints => 'Tap on map to add distance points';
+
+  @override
+  String get distanceTitle => 'Distance Title';
+
+  @override
+  String get errorDistanceTitleRequired => 'Please enter distance title';
 }

@@ -10,11 +10,14 @@ import 'package:area_and_plot/features/map_calculator/domain/usecases/calculate_
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part 'map_calculator_provider.freezed.dart';
 part 'map_calculator_provider.g.dart';
+
+enum MeasureMode { area, distance }
 
 @freezed
 class MapCalculatorState with _$MapCalculatorState {
@@ -24,6 +27,7 @@ class MapCalculatorState with _$MapCalculatorState {
     @Default(AreaUnit.katha) AreaUnit displayUnit,
     @Default(false) bool isSaving,
     @Default(true) bool showSavedAreas,
+    MeasureMode? mode,
     String? errorMessage,
   }) = _MapCalculatorState;
 }
@@ -32,34 +36,47 @@ class MapCalculatorState with _$MapCalculatorState {
 class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   static const _useCase = CalculatePolygonAreaUseCase();
   static const _uuid = Uuid();
+  static const _distanceCalc = Distance();
 
   @override
   MapCalculatorState build() => const MapCalculatorState();
 
+  void setMode(MeasureMode mode) {
+    state = state.copyWith(
+      mode: mode,
+      points: const [],
+      areaInSqFt: 0.0,
+      errorMessage: null,
+    );
+  }
+
   void addPoint(MapAreaPoint point) {
-    if (state.points.length >= 3) return;
+    if (state.mode == null) return;
+    if (state.mode == MeasureMode.area && state.points.length >= 3) return;
     final updated = [...state.points, point];
-    final area = _useCase(updated);
+    final area = state.mode == MeasureMode.area ? _useCase(updated) : 0.0;
     state = state.copyWith(points: updated, areaInSqFt: area);
   }
 
   void undoLastPoint() {
     if (state.points.isEmpty) return;
     final updated = state.points.sublist(0, state.points.length - 1);
-    final area = _useCase(updated);
+    final area = state.mode == MeasureMode.area ? _useCase(updated) : 0.0;
     state = state.copyWith(points: updated, areaInSqFt: area);
   }
 
   void movePoint(int index, MapAreaPoint newPoint) {
     if (index < 0 || index >= state.points.length) return;
     final updated = List<MapAreaPoint>.from(state.points)..[index] = newPoint;
-    state = state.copyWith(points: updated, areaInSqFt: _useCase(updated));
+    final area = state.mode == MeasureMode.area ? _useCase(updated) : 0.0;
+    state = state.copyWith(points: updated, areaInSqFt: area);
   }
 
   void insertPoint(int afterIndex, MapAreaPoint point) {
     final updated = List<MapAreaPoint>.from(state.points)
       ..insert(afterIndex + 1, point);
-    state = state.copyWith(points: updated, areaInSqFt: _useCase(updated));
+    final area = state.mode == MeasureMode.area ? _useCase(updated) : 0.0;
+    state = state.copyWith(points: updated, areaInSqFt: area);
   }
 
   void clearPoints() {
@@ -67,6 +84,7 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
       points: const [],
       areaInSqFt: 0.0,
       errorMessage: null,
+      mode: null,
     );
   }
 
@@ -87,20 +105,40 @@ class MapCalculatorNotifier extends _$MapCalculatorNotifier {
   Map<AreaUnit, double> get allValues =>
       AreaConverter.convertToAll(state.areaInSqFt);
 
+  double get totalDistanceMeters {
+    final pts = state.points;
+    if (pts.length < 2) return 0.0;
+    double sum = 0.0;
+    for (int i = 0; i < pts.length - 1; i++) {
+      sum += _distanceCalc.as(
+        LengthUnit.Meter,
+        LatLng(pts[i].latitude, pts[i].longitude),
+        LatLng(pts[i + 1].latitude, pts[i + 1].longitude),
+      );
+    }
+    return sum;
+  }
+
   Future<bool> saveToHistory({
     String? label,
     String? notes,
     required AreaUnit displayUnit,
   }) async {
-    if (state.points.length < 3) return false;
+    final mode = state.mode;
+    if (mode == null) return false;
+    final minPoints = mode == MeasureMode.area ? 3 : 2;
+    if (state.points.length < minPoints) return false;
+
     state = state.copyWith(isSaving: true, errorMessage: null);
     var success = false;
     try {
       final entry = HistoryEntry(
         id: _uuid.v4(),
-        type: HistoryType.mapCalculator,
-        areaInSqFt: state.areaInSqFt,
-        displayUnit: displayUnit,
+        type: mode == MeasureMode.area
+            ? HistoryType.mapCalculator
+            : HistoryType.mapDistance,
+        areaInSqFt: mode == MeasureMode.area ? state.areaInSqFt : 0.0,
+        displayUnit: mode == MeasureMode.area ? displayUnit : AreaUnit.squareMeter,
         createdAt: DateTime.now(),
         label: label,
         notes: notes,

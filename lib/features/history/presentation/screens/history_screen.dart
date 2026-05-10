@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 
 class HistoryScreen extends ConsumerStatefulWidget {
   const HistoryScreen({super.key});
@@ -138,16 +139,25 @@ class _HistoryCard extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(entry.createdAt);
 
+    final isDistance = entry.type == HistoryType.mapDistance;
     final shapeLabel = entry.shape == null
-        ? (entry.label ?? l.map)
+        ? (entry.label ?? (isDistance ? l.distance : l.map))
         : entry.shape!.label(l.localeName);
-    final areaValue = AreaConverter.convert(
-      value: entry.areaInSqFt,
-      from: AreaUnit.squareFeet,
-      to: entry.displayUnit,
-    );
-    final areaDisplay =
-        '${NumberFormatter.format(areaValue)} ${entry.displayUnit.label(l.localeName)}';
+    final String areaDisplay;
+    if (isDistance) {
+      final meters = _distanceMeters(entry.mapPoints);
+      areaDisplay = meters >= 1000
+          ? '${(meters / 1000).toStringAsFixed(2)} km'
+          : '${meters.toStringAsFixed(1)} m';
+    } else {
+      final areaValue = AreaConverter.convert(
+        value: entry.areaInSqFt,
+        from: AreaUnit.squareFeet,
+        to: entry.displayUnit,
+      );
+      areaDisplay =
+          '${NumberFormatter.format(areaValue)} ${entry.displayUnit.label(l.localeName)}';
+    }
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -161,18 +171,12 @@ class _HistoryCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: entry.type == HistoryType.mapCalculator
-                    ? colorScheme.tertiaryContainer
-                    : colorScheme.primaryContainer,
+                color: _iconBg(entry.type, colorScheme),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
-                entry.type == HistoryType.mapCalculator
-                    ? Icons.map_outlined
-                    : Icons.calculate_outlined,
-                color: entry.type == HistoryType.mapCalculator
-                    ? colorScheme.onTertiaryContainer
-                    : colorScheme.onPrimaryContainer,
+                _iconFor(entry.type),
+                color: _iconFg(entry.type, colorScheme),
               ),
             ),
             const SizedBox(width: 12),
@@ -218,6 +222,54 @@ class _HistoryCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _iconBg(HistoryType type, ColorScheme cs) {
+    switch (type) {
+      case HistoryType.mapCalculator:
+        return cs.tertiaryContainer;
+      case HistoryType.mapDistance:
+        return cs.secondaryContainer;
+      case HistoryType.areaCalculator:
+        return cs.primaryContainer;
+    }
+  }
+
+  Color _iconFg(HistoryType type, ColorScheme cs) {
+    switch (type) {
+      case HistoryType.mapCalculator:
+        return cs.onTertiaryContainer;
+      case HistoryType.mapDistance:
+        return cs.onSecondaryContainer;
+      case HistoryType.areaCalculator:
+        return cs.onPrimaryContainer;
+    }
+  }
+
+  IconData _iconFor(HistoryType type) {
+    switch (type) {
+      case HistoryType.mapCalculator:
+        return Icons.map_outlined;
+      case HistoryType.mapDistance:
+        return Icons.timeline;
+      case HistoryType.areaCalculator:
+        return Icons.calculate_outlined;
+    }
+  }
+
+  static const _distance = Distance();
+
+  double _distanceMeters(List<double>? flat) {
+    if (flat == null || flat.length < 4) return 0.0;
+    double sum = 0.0;
+    for (int i = 0; i + 3 < flat.length; i += 2) {
+      sum += _distance.as(
+        LengthUnit.Meter,
+        LatLng(flat[i], flat[i + 1]),
+        LatLng(flat[i + 2], flat[i + 3]),
+      );
+    }
+    return sum;
   }
 }
 

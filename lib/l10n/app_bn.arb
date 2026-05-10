@@ -148,5 +148,16 @@
   "signOut": "সাইন আউট",
   "signIn": "সাইন ইন",
   "loginToSyncText": "অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন",
-  "errorPlotNameRequired": "জমির নাম লিখুন"
+  "errorPlotNameRequired": "জমির নাম লিখুন",
+
+  "addMeasurement": "পরিমাপ যোগ করুন",
+  "areaMeasure": "ক্ষেত্রফল পরিমাপ",
+  "areaMeasureDesc": "বহুভুজ এঁকে ক্ষেত্রফল পরিমাপ করুন",
+  "distanceMeasure": "দূরত্ব পরিমাপ",
+  "distanceMeasureDesc": "পথ এঁকে দূরত্ব পরিমাপ করুন",
+  "totalDistance": "মোট দূরত্ব",
+  "distance": "দূরত্ব",
+  "tapToAddDistancePoints": "দূরত্বের বিন্দু যোগ করতে মানচিত্রে ট্যাপ করুন",
+  "distanceTitle": "দূরত্বের নাম",
+  "errorDistanceTitleRequired": "দূরত্বের নাম লিখুন"
 }

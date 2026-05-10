@@ -31,14 +31,19 @@ class HistoryDetailScreen extends ConsumerWidget {
 
     final l = AppLocalizations.of(context);
     final cs = Theme.of(context).colorScheme;
-    final isMap = live.type == HistoryType.mapCalculator;
-    final color = isMap ? cs.tertiary : cs.primary;
+    final isDistance = live.type == HistoryType.mapDistance;
+    final isMap = live.type == HistoryType.mapCalculator || isDistance;
+    final color = isDistance
+        ? cs.secondary
+        : (isMap ? cs.tertiary : cs.primary);
     final allValues = AreaConverter.convertToAll(live.areaInSqFt);
-    final title =
-        live.label ??
-        (isMap
-            ? l.mapCalculator
-            : live.shape?.label(l.localeName) ?? l.areaCalculator);
+    final title = live.label ??
+        (isDistance
+            ? l.distanceMeasure
+            : isMap
+                ? l.mapCalculator
+                : live.shape?.label(l.localeName) ?? l.areaCalculator);
+    final distanceMeters = isDistance ? _totalDistance(live.mapPoints) : 0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -65,7 +70,7 @@ class HistoryDetailScreen extends ConsumerWidget {
           SizedBox(
             height: 220,
             child: isMap
-                ? _MapHeader(live: live, cs: cs)
+                ? _MapHeader(live: live, cs: cs, isDistance: isDistance)
                 : Container(
                     color: color.withAlpha(15),
                     child: CustomPaint(painter: _ShapePainter(live, color)),
@@ -76,38 +81,58 @@ class HistoryDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SectionLabel(l.allAreaValues),
-                const SizedBox(height: 8),
-                Card(
-                  child: Column(
-                    children: AreaUnit.values.map((unit) {
-                      final val = allValues[unit] ?? 0.0;
-                      final isPrimary = unit == live.displayUnit;
-                      return ListTile(
-                        dense: true,
-                        title: Text(
-                          unit.label(l.localeName),
-                          style: isPrimary
-                              ? TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: color,
-                                )
-                              : null,
-                        ),
-                        trailing: Text(
-                          NumberFormatter.format(val),
-                          style: Theme.of(context).textTheme.bodyLarge
-                              ?.copyWith(
-                                fontWeight: isPrimary
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: isPrimary ? color : null,
-                              ),
-                        ),
-                      );
-                    }).toList(),
+                if (isDistance) ...[
+                  _SectionLabel(l.totalDistance),
+                  const SizedBox(height: 8),
+                  Card(
+                    child: ListTile(
+                      dense: true,
+                      title: Text(l.totalDistance,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: color)),
+                      trailing: Text(
+                        _formatDistance(distanceMeters),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: color,
+                            ),
+                      ),
+                    ),
                   ),
-                ),
+                ] else ...[
+                  _SectionLabel(l.allAreaValues),
+                  const SizedBox(height: 8),
+                  Card(
+                    child: Column(
+                      children: AreaUnit.values.map((unit) {
+                        final val = allValues[unit] ?? 0.0;
+                        final isPrimary = unit == live.displayUnit;
+                        return ListTile(
+                          dense: true,
+                          title: Text(
+                            unit.label(l.localeName),
+                            style: isPrimary
+                                ? TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: color,
+                                  )
+                                : null,
+                          ),
+                          trailing: Text(
+                            NumberFormatter.format(val),
+                            style: Theme.of(context).textTheme.bodyLarge
+                                ?.copyWith(
+                                  fontWeight: isPrimary
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                  color: isPrimary ? color : null,
+                                ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 16),
                 if (!isMap && live.dimensions != null) ...[
                   _SectionLabel(l.dimensions),
@@ -187,6 +212,26 @@ class HistoryDetailScreen extends ConsumerWidget {
     trailing: Text('${NumberFormatter.format(value)} ft'),
   );
 
+  static const _distanceCalc = Distance();
+
+  double _totalDistance(List<double>? flat) {
+    if (flat == null || flat.length < 4) return 0.0;
+    double sum = 0.0;
+    for (int i = 0; i + 3 < flat.length; i += 2) {
+      sum += _distanceCalc.as(
+        LengthUnit.Meter,
+        LatLng(flat[i], flat[i + 1]),
+        LatLng(flat[i + 2], flat[i + 3]),
+      );
+    }
+    return sum;
+  }
+
+  String _formatDistance(double m) {
+    if (m >= 1000) return '${(m / 1000).toStringAsFixed(2)} km';
+    return '${m.toStringAsFixed(1)} m';
+  }
+
   Future<void> _confirmDelete(
     BuildContext context,
     WidgetRef ref,
@@ -217,10 +262,15 @@ class HistoryDetailScreen extends ConsumerWidget {
 }
 
 class _MapHeader extends ConsumerWidget {
-  const _MapHeader({required this.live, required this.cs});
+  const _MapHeader({
+    required this.live,
+    required this.cs,
+    required this.isDistance,
+  });
 
   final HistoryEntry live;
   final ColorScheme cs;
+  final bool isDistance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -266,7 +316,7 @@ class _MapHeader extends ConsumerWidget {
           maxZoom: 22,
           userAgentPackageName: 'net.appcolors.area_and_plot',
         ),
-        if (latlngs.length >= 3)
+        if (!isDistance && latlngs.length >= 3)
           PolygonLayer(
             polygons: [
               Polygon(
@@ -274,6 +324,16 @@ class _MapHeader extends ConsumerWidget {
                 color: cs.primary.withAlpha(60),
                 borderColor: cs.primary,
                 borderStrokeWidth: 2.5,
+              ),
+            ],
+          ),
+        if (isDistance && latlngs.length >= 2)
+          PolylineLayer(
+            polylines: [
+              Polyline(
+                points: latlngs,
+                color: cs.secondary,
+                strokeWidth: 3.0,
               ),
             ],
           ),
