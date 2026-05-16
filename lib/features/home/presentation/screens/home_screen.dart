@@ -78,6 +78,7 @@ class HomeScreen extends StatelessWidget {
   void _showUnitsInfo(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -210,44 +211,55 @@ class _UnitsInfoSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l.unitsInfo, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 16),
-          Text(l.bangladeshUnits,
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text('• ${l.kathaInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.bighaInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.decimalInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.acreInfo}'),
-          const SizedBox(height: 16),
-          Text(l.internationalUnits,
-              style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text('• ${l.squareMeterInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.hectareInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.squareKilometerInfo}'),
-          const SizedBox(height: 8),
-          Text('• ${l.squareYardInfo}'),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(l.close),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l.unitsInfo, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 16),
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l.bangladeshUnits,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    Text('• ${l.kathaInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.bighaInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.decimalInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.acreInfo}'),
+                    const SizedBox(height: 16),
+                    Text(l.internationalUnits,
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 8),
+                    Text('• ${l.squareMeterInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.hectareInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.squareKilometerInfo}'),
+                    const SizedBox(height: 8),
+                    Text('• ${l.squareYardInfo}'),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l.close),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
