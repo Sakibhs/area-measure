@@ -2,7 +2,7 @@ name: area_and_plot
 description: "Bangladesh Land Area Calculator with Map Integration"
 publish_to: 'none'
 
-version: 1.0.0+2
+version: 1.0.0+5
 
 environment:
   sdk: ^3.9.2
