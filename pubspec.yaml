@@ -2,7 +2,7 @@ name: area_and_plot
 description: "Bangladesh Land Area Calculator with Map Integration"
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: ^3.9.2
@@ -56,6 +56,7 @@ dev_dependencies:
   riverpod_generator: any
   freezed: any
   json_serializable: any
+  flutter_launcher_icons: any
 
 flutter:
   generate: true
@@ -63,3 +64,12 @@ flutter:
 
   assets:
     - assets/images/
+
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: false
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#F2F4F0"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_foreground_inset: 16

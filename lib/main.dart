@@ -22,7 +22,7 @@ class AreaAndPlotApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
     return MaterialApp.router(
-      title: 'Area & Plot',
+      title: 'Area & Plot Measure',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
