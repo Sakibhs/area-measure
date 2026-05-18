@@ -100,6 +100,9 @@
   "errorMinVertices": "Polygon needs at least 3 vertices",
   "errorSaveFailed": "Failed to save calculation",
   "permissionDenied": "Location permission is required for map features",
+  "myLocation": "My location",
+  "locationServicesDisabled": "Please enable location services",
+  "locationUnavailable": "Could not get current location",
 
   "bangladeshUnits": "Common Land Units",
   "kathaInfo": "1 Katha = 720 sq ft",

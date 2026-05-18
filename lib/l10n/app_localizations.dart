@@ -554,6 +554,24 @@ abstract class AppLocalizations {
   /// **'Location permission is required for map features'**
   String get permissionDenied;
 
+  /// No description provided for @myLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'My location'**
+  String get myLocation;
+
+  /// No description provided for @locationServicesDisabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enable location services'**
+  String get locationServicesDisabled;
+
+  /// No description provided for @locationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get current location'**
+  String get locationUnavailable;
+
   /// No description provided for @bangladeshUnits.
   ///
   /// In en, this message translates to:

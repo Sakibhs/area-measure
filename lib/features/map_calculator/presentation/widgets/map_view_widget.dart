@@ -3,6 +3,7 @@ import 'package:area_and_plot/features/history/domain/entities/history_entry.dar
 import 'package:area_and_plot/features/history/presentation/providers/history_provider.dart';
 import 'package:area_and_plot/features/map_calculator/domain/entities/map_area_point.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/providers/map_camera_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_style_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_style_button.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/saved_areas_overlay.dart';
@@ -12,14 +13,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 class MapViewWidget extends ConsumerStatefulWidget {
-  const MapViewWidget({super.key});
+  const MapViewWidget({
+    super.key,
+    required this.controller,
+    this.onMapReady,
+  });
+
+  final MapController controller;
+  final VoidCallback? onMapReady;
 
   @override
   ConsumerState<MapViewWidget> createState() => _MapViewWidgetState();
 }
 
 class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
-  final _mapController = MapController();
+  MapController get _mapController => widget.controller;
   int? _draggingIndex;
   int? _draggingPointer;
   int? _pendingMidIndex;
@@ -47,12 +55,6 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
         (a.longitude + b.longitude) / 2,
       );
     });
-  }
-
-  @override
-  void dispose() {
-    _mapController.dispose();
-    super.dispose();
   }
 
   void _clearGestureState() {
@@ -207,6 +209,13 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                   ? InteractiveFlag.none
                   : InteractiveFlag.all,
             ),
+            onMapReady: widget.onMapReady,
+            onPositionChanged: (camera, hasGesture) {
+              if (!hasGesture) return;
+              ref
+                  .read(mapCameraNotifierProvider.notifier)
+                  .save(camera.center, camera.zoom);
+            },
             onTap: (_, point) {
               if (_suppressNextTap) {
                 _suppressNextTap = false;

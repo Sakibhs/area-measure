@@ -1,15 +1,66 @@
+import 'package:area_and_plot/features/map_calculator/data/services/location_service.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/providers/map_camera_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_save_form.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_view_widget.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/widgets/my_location_fab.dart';
 import 'package:area_and_plot/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
-class MapCalculatorScreen extends ConsumerWidget {
+class MapCalculatorScreen extends ConsumerStatefulWidget {
   const MapCalculatorScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MapCalculatorScreen> createState() =>
+      _MapCalculatorScreenState();
+}
+
+class _MapCalculatorScreenState extends ConsumerState<MapCalculatorScreen> {
+  static const _myLocationZoom = 17.0;
+  static const _locationService = LocationService();
+
+  late final MapController _mapController = MapController();
+  bool _initialCameraApplied = false;
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  void _moveTo(LatLng latLng) {
+    _mapController.move(latLng, _myLocationZoom);
+  }
+
+  Future<void> _handleMapReady() async {
+    if (_initialCameraApplied) return;
+    _initialCameraApplied = true;
+
+    final cached = await ref.read(mapCameraNotifierProvider.future);
+    if (!mounted) return;
+
+    if (cached != null) {
+      _mapController.move(
+        LatLng(cached.latitude, cached.longitude),
+        cached.zoom,
+      );
+      return;
+    }
+
+    // First launch — silently try to center on the user's current location.
+    final result = await _locationService.getCurrentLocation();
+    if (!mounted || !result.isSuccess) return;
+    _mapController.move(result.position!, _myLocationZoom);
+    ref
+        .read(mapCameraNotifierProvider.notifier)
+        .save(result.position!, _myLocationZoom);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(mapCalculatorNotifierProvider);
     final notifier = ref.read(mapCalculatorNotifierProvider.notifier);
     final l = AppLocalizations.of(context);
@@ -29,7 +80,10 @@ class MapCalculatorScreen extends ConsumerWidget {
     return Scaffold(
       body: Stack(
         children: [
-          const MapViewWidget(),
+          MapViewWidget(
+            controller: _mapController,
+            onMapReady: _handleMapReady,
+          ),
           if (showDistanceBar)
             _DistanceTopBar(
               meters: notifier.totalDistanceMeters,
@@ -60,7 +114,7 @@ class MapCalculatorScreen extends ConsumerWidget {
             bottom: 16,
             left: 16,
             child: hasMode
-                ? FloatingActionButton(
+                ? FloatingActionButton.small(
                     heroTag: 'map_cancel_fab',
                     tooltip: l.clearPoints,
                     backgroundColor: colorScheme.errorContainer,
@@ -68,28 +122,38 @@ class MapCalculatorScreen extends ConsumerWidget {
                     onPressed: notifier.clearPoints,
                     child: const Icon(Icons.close),
                   )
-                : FloatingActionButton(
+                : FloatingActionButton.small(
                     heroTag: 'map_add_fab',
                     tooltip: l.addMeasurement,
                     onPressed: () => _openModePicker(context, notifier),
                     child: const Icon(Icons.add),
                   ),
           ),
-          if (canSave)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: FloatingActionButton(
-                heroTag: 'map_save_fab',
-                onPressed: () => _openSaveForm(
-                  context,
-                  mode,
-                  state.areaInSqFt,
-                  notifier.totalDistanceMeters,
-                ),
-                child: const Icon(Icons.save_outlined),
-              ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                MyLocationFab(onLocationFound: _moveTo),
+                if (canSave) ...[
+                  const SizedBox(height: 12),
+                  FloatingActionButton.small(
+                    heroTag: 'map_save_fab',
+                    tooltip: l.save,
+                    onPressed: () => _openSaveForm(
+                      context,
+                      mode,
+                      state.areaInSqFt,
+                      notifier.totalDistanceMeters,
+                    ),
+                    child: const Icon(Icons.save_outlined),
+                  ),
+                ],
+              ],
             ),
+          ),
         ],
       ),
     );

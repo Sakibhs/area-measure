@@ -243,6 +243,15 @@ class AppLocalizationsBn extends AppLocalizations {
       'মানচিত্র ব্যবহারের জন্য অবস্থান অনুমতি প্রয়োজন';
 
   @override
+  String get myLocation => 'আমার অবস্থান';
+
+  @override
+  String get locationServicesDisabled => 'অনুগ্রহ করে অবস্থান সেবা চালু করুন';
+
+  @override
+  String get locationUnavailable => 'বর্তমান অবস্থান পাওয়া যায়নি';
+
+  @override
   String get bangladeshUnits => 'প্রচলিত জমির একক';
 
   @override

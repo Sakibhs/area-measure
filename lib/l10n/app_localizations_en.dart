@@ -243,6 +243,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Location permission is required for map features';
 
   @override
+  String get myLocation => 'My location';
+
+  @override
+  String get locationServicesDisabled => 'Please enable location services';
+
+  @override
+  String get locationUnavailable => 'Could not get current location';
+
+  @override
   String get bangladeshUnits => 'Common Land Units';
 
   @override
