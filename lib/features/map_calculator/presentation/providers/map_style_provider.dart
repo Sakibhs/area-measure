@@ -35,8 +35,24 @@ class MapStyleNotifier extends _$MapStyleNotifier {
 }
 
 String mapTileUrl(MapStyle style) {
-  const key = AppConstants.maptilerApiKey;
-  return style == MapStyle.street
-      ? 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=$key'
-      : 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=$key';
+  if (style == MapStyle.street) {
+    const key = AppConstants.maptilerApiKey;
+    return 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}{r}.png?key=$key';
+  }
+  // Stadia Maps "Alidade Satellite" — sharp imagery, native @2x retina via {r},
+  // simple signup. Configure via --dart-define=STADIA_API_KEY=...
+  const key = AppConstants.stadiaApiKey;
+  return 'https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg?api_key=$key';
 }
+
+String mapTileAttribution(MapStyle style) => style == MapStyle.street
+    ? '© MapTiler © OpenStreetMap contributors'
+    : '© Stadia Maps © OpenMapTiles © OpenStreetMap contributors';
+
+// Camera-side cap: how far the user can pinch in.
+double maxZoomForStyle(MapStyle style) => 22.0;
+
+// Server-side cap: highest zoom for which the provider actually serves tiles.
+// Past this, flutter_map upscales from the deepest native tile.
+double maxNativeZoomForStyle(MapStyle style) =>
+    style == MapStyle.satellite ? 20.0 : 22.0;

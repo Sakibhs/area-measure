@@ -27,9 +27,11 @@ class MapCameraNotifier extends _$MapCameraNotifier {
       final lat = _prefs!.getDouble(_latKey);
       final lon = _prefs!.getDouble(_lonKey);
       final zoom = _prefs!.getDouble(_zoomKey);
-      if (lat != null && lon != null && zoom != null) {
-        return MapCameraState(latitude: lat, longitude: lon, zoom: zoom);
+      if (_isValidCamera(lat, lon, zoom)) {
+        return MapCameraState(latitude: lat!, longitude: lon!, zoom: zoom!);
       }
+      // Drop any corrupt/legacy values so we don't keep loading them.
+      await _clear();
       return null;
     } catch (e, st) {
       debugPrint('MapCameraNotifier load error: $e\n$st');
@@ -38,6 +40,13 @@ class MapCameraNotifier extends _$MapCameraNotifier {
   }
 
   void save(LatLng center, double zoom) {
+    if (!_isValidCamera(center.latitude, center.longitude, zoom)) {
+      debugPrint(
+        'MapCameraNotifier ignored non-finite save: '
+        '$center zoom=$zoom',
+      );
+      return;
+    }
     final next = MapCameraState(
       latitude: center.latitude,
       longitude: center.longitude,
@@ -56,5 +65,24 @@ class MapCameraNotifier extends _$MapCameraNotifier {
         debugPrint('MapCameraNotifier save error: $e\n$st');
       }
     });
+  }
+
+  Future<void> _clear() async {
+    try {
+      _prefs ??= await SharedPreferences.getInstance();
+      await _prefs!.remove(_latKey);
+      await _prefs!.remove(_lonKey);
+      await _prefs!.remove(_zoomKey);
+    } catch (e, st) {
+      debugPrint('MapCameraNotifier clear error: $e\n$st');
+    }
+  }
+
+  static bool _isValidCamera(double? lat, double? lon, double? zoom) {
+    if (lat == null || lon == null || zoom == null) return false;
+    if (!lat.isFinite || !lon.isFinite || !zoom.isFinite) return false;
+    if (lat < -90 || lat > 90) return false;
+    if (lon < -180 || lon > 180) return false;
+    return true;
   }
 }

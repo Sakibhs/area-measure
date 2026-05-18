@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:area_and_plot/features/auth/presentation/providers/auth_provider.dart';
 import 'package:area_and_plot/features/map_calculator/data/services/location_service.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_camera_provider.dart';
+import 'package:area_and_plot/features/map_calculator/presentation/providers/map_style_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_save_form.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/map_view_widget.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/widgets/my_location_fab.dart';
@@ -33,6 +36,7 @@ class _MapCalculatorScreenState extends ConsumerState<MapCalculatorScreen> {
   }
 
   void _moveTo(LatLng latLng) {
+    if (!_isFiniteLatLng(latLng)) return;
     _mapController.move(latLng, _myLocationZoom);
   }
 
@@ -73,21 +77,30 @@ class _MapCalculatorScreenState extends ConsumerState<MapCalculatorScreen> {
     if (!mounted) return;
 
     if (cached != null) {
-      _mapController.move(
-        LatLng(cached.latitude, cached.longitude),
-        cached.zoom,
-      );
-      return;
+      final cachedCenter = LatLng(cached.latitude, cached.longitude);
+      if (_isFiniteLatLng(cachedCenter) && cached.zoom.isFinite) {
+        final style =
+            ref.read(mapStyleNotifierProvider).valueOrNull ??
+                MapStyle.satellite;
+        final maxZ = maxZoomForStyle(style);
+        _mapController.move(cachedCenter, math.min(cached.zoom, maxZ));
+        return;
+      }
     }
 
     // First launch — silently try to center on the user's current location.
     final result = await _locationService.getCurrentLocation();
     if (!mounted || !result.isSuccess) return;
-    _mapController.move(result.position!, _myLocationZoom);
+    final position = result.position!;
+    if (!_isFiniteLatLng(position)) return;
+    _mapController.move(position, _myLocationZoom);
     ref
         .read(mapCameraNotifierProvider.notifier)
-        .save(result.position!, _myLocationZoom);
+        .save(position, _myLocationZoom);
   }
+
+  static bool _isFiniteLatLng(LatLng latLng) =>
+      latLng.latitude.isFinite && latLng.longitude.isFinite;
 
   @override
   Widget build(BuildContext context) {

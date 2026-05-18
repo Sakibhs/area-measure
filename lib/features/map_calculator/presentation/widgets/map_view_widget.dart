@@ -39,12 +39,6 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   static const _hitRadius = 30.0;
   static const _midHitRadius = 22.0;
   static const _midDragThreshold = 18.0;
-  static const _key = AppConstants.maptilerApiKey;
-
-  String _tileUrl(MapStyle style) => style == MapStyle.street
-      ? 'https://api.maptiler.com/maps/streets/{z}/{x}/{y}.png?key=$_key'
-      : 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=$_key';
-
   static List<LatLng> _midpoints(List<LatLng> latlngs) {
     if (latlngs.length < 3) return [];
     return List.generate(latlngs.length, (i) {
@@ -191,6 +185,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     final hasSavedAvailable = allSavedEntries.isNotEmpty;
 
     final isDistanceMode = state.mode == MeasureMode.distance;
+    final tileMaxZoom = maxZoomForStyle(mapStyle);
 
     return Stack(
       children: [
@@ -202,12 +197,12 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
               AppConstants.defaultMapLongitude,
             ),
             initialZoom: AppConstants.defaultMapZoom,
-            maxZoom: 22,
+            maxZoom: tileMaxZoom,
             interactionOptions: InteractionOptions(
               flags:
                   (_draggingIndex != null || _pendingMidIndex != null)
                   ? InteractiveFlag.none
-                  : InteractiveFlag.all,
+                  : InteractiveFlag.all & ~InteractiveFlag.rotate,
             ),
             onMapReady: widget.onMapReady,
             onPositionChanged: (camera, hasGesture) {
@@ -236,9 +231,10 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
           ),
           children: [
             TileLayer(
-              urlTemplate: _tileUrl(mapStyle),
-              maxZoom: 22,
-              maxNativeZoom: 22,
+              urlTemplate: mapTileUrl(mapStyle),
+              retinaMode: RetinaMode.isHighDensity(context),
+              maxZoom: tileMaxZoom,
+              maxNativeZoom: maxNativeZoomForStyle(mapStyle).toInt(),
               userAgentPackageName: 'net.appcolors.area_and_plot',
             ),
             ...SavedAreasOverlay.buildLayers(savedEntries),
@@ -345,7 +341,35 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
             ],
           ),
         ),
+        Positioned(
+          left: 8,
+          bottom: 8,
+          child: _AttributionBadge(text: mapTileAttribution(mapStyle)),
+        ),
       ],
+    );
+  }
+}
+
+class _AttributionBadge extends StatelessWidget {
+  const _AttributionBadge({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.black.withAlpha(120),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(color: Colors.white, fontSize: 10),
+        ),
+      ),
     );
   }
 }

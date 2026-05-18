@@ -54,7 +54,11 @@ class SavedAreasOverlay {
     if (flat == null || flat.length < 4) return const [];
     final out = <LatLng>[];
     for (int i = 0; i + 1 < flat.length; i += 2) {
-      out.add(LatLng(flat[i], flat[i + 1]));
+      final lat = flat[i];
+      final lon = flat[i + 1];
+      if (!lat.isFinite || !lon.isFinite) return const [];
+      if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return const [];
+      out.add(LatLng(lat, lon));
     }
     return out;
   }

@@ -303,19 +303,26 @@ class _MapHeader extends ConsumerWidget {
             ),
           );
 
-    return FlutterMap(
-      options: MapOptions(
-        initialCameraFit: cameraFit,
-        interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.none,
-        ),
-      ),
+    final tileMaxZoom = maxZoomForStyle(mapStyle);
+
+    return Stack(
       children: [
-        TileLayer(
-          urlTemplate: mapTileUrl(mapStyle),
-          maxZoom: 22,
-          userAgentPackageName: 'net.appcolors.area_and_plot',
-        ),
+        FlutterMap(
+          options: MapOptions(
+            initialCameraFit: cameraFit,
+            maxZoom: tileMaxZoom,
+            interactionOptions: const InteractionOptions(
+              flags: InteractiveFlag.none,
+            ),
+          ),
+          children: [
+            TileLayer(
+              urlTemplate: mapTileUrl(mapStyle),
+              retinaMode: RetinaMode.isHighDensity(context),
+              maxZoom: tileMaxZoom,
+              maxNativeZoom: maxNativeZoomForStyle(mapStyle).toInt(),
+              userAgentPackageName: 'net.appcolors.area_and_plot',
+            ),
         if (!isDistance && latlngs.length >= 3)
           PolygonLayer(
             polygons: [
@@ -356,6 +363,25 @@ class _MapHeader extends ConsumerWidget {
                 )
                 .toList(),
           ),
+          ],
+        ),
+        Positioned(
+          left: 6,
+          bottom: 6,
+          child: IgnorePointer(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: Colors.black.withAlpha(120),
+                borderRadius: BorderRadius.circular(3),
+              ),
+              child: Text(
+                mapTileAttribution(mapStyle),
+                style: const TextStyle(color: Colors.white, fontSize: 9),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
