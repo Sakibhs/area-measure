@@ -22,10 +22,15 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   final _mapController = MapController();
   int? _draggingIndex;
   int? _draggingPointer;
+  int? _pendingMidIndex;
+  LatLng? _pendingMidLatLng;
+  Offset? _pendingMidStart;
+  bool _suppressNextTap = false;
   final Set<int> _activePointers = {};
 
   static const _hitRadius = 30.0;
   static const _midHitRadius = 22.0;
+  static const _midDragThreshold = 18.0;
   static const _key = AppConstants.maptilerApiKey;
 
   String _tileUrl(MapStyle style) => style == MapStyle.street
@@ -50,19 +55,27 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     super.dispose();
   }
 
+  void _clearGestureState() {
+    _draggingIndex = null;
+    _draggingPointer = null;
+    _pendingMidIndex = null;
+    _pendingMidLatLng = null;
+    _pendingMidStart = null;
+  }
+
   void _onPointerDown(PointerDownEvent event, List<MapAreaPoint> points) {
     _activePointers.add(event.pointer);
 
     // Multi-touch (pinch-zoom) — abort any active drag so the map can zoom.
     if (_activePointers.length > 1) {
-      if (_draggingIndex != null) {
-        setState(() {
-          _draggingIndex = null;
-          _draggingPointer = null;
-        });
+      if (_draggingIndex != null || _pendingMidIndex != null) {
+        setState(_clearGestureState);
       }
+      _suppressNextTap = false;
       return;
     }
+
+    _suppressNextTap = false;
 
     final camera = _mapController.camera;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
@@ -71,6 +84,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     for (int i = 0; i < latlngs.length; i++) {
       final screen = camera.latLngToScreenOffset(latlngs[i]);
       if ((screen - event.localPosition).distance < _hitRadius) {
+        _suppressNextTap = true;
         setState(() {
           _draggingIndex = i;
           _draggingPointer = event.pointer;
@@ -79,22 +93,17 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
       }
     }
 
-    // Check midpoints — touching one inserts a new vertex there and drags it
+    // Check midpoints — defer the insertion until the finger actually drags,
+    // so a plain tap on a midpoint marker does nothing.
     final mids = _midpoints(latlngs);
     for (int i = 0; i < mids.length; i++) {
       final screen = camera.latLngToScreenOffset(mids[i]);
       if ((screen - event.localPosition).distance < _midHitRadius) {
-        ref
-            .read(mapCalculatorNotifierProvider.notifier)
-            .insertPoint(
-              i,
-              MapAreaPoint(
-                latitude: mids[i].latitude,
-                longitude: mids[i].longitude,
-              ),
-            );
+        _suppressNextTap = true;
         setState(() {
-          _draggingIndex = i + 1;
+          _pendingMidIndex = i;
+          _pendingMidLatLng = mids[i];
+          _pendingMidStart = event.localPosition;
           _draggingPointer = event.pointer;
         });
         return;
@@ -103,9 +112,33 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   }
 
   void _onPointerMove(PointerMoveEvent event, LatLng latLng) {
-    if (_draggingIndex == null) return;
     if (_draggingPointer != event.pointer) return;
     if (_activePointers.length > 1) return;
+
+    // Promote a pending midpoint touch to a real drag once the finger has
+    // moved beyond the touch-slop threshold.
+    if (_pendingMidIndex != null) {
+      if ((event.localPosition - _pendingMidStart!).distance <
+          _midDragThreshold) {
+        return;
+      }
+      final i = _pendingMidIndex!;
+      final mid = _pendingMidLatLng!;
+      ref
+          .read(mapCalculatorNotifierProvider.notifier)
+          .insertPoint(
+            i,
+            MapAreaPoint(latitude: mid.latitude, longitude: mid.longitude),
+          );
+      setState(() {
+        _draggingIndex = i + 1;
+        _pendingMidIndex = null;
+        _pendingMidLatLng = null;
+        _pendingMidStart = null;
+      });
+    }
+
+    if (_draggingIndex == null) return;
     ref
         .read(mapCalculatorNotifierProvider.notifier)
         .movePoint(
@@ -116,11 +149,11 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
 
   void _onPointerUp(PointerEvent event) {
     _activePointers.remove(event.pointer);
-    if (_draggingPointer == event.pointer && _draggingIndex != null) {
-      setState(() {
-        _draggingIndex = null;
-        _draggingPointer = null;
-      });
+    if (_draggingPointer != event.pointer) return;
+    if (_draggingIndex != null || _pendingMidIndex != null) {
+      setState(_clearGestureState);
+    } else {
+      _draggingPointer = null;
     }
   }
 
@@ -169,18 +202,24 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
             initialZoom: AppConstants.defaultMapZoom,
             maxZoom: 22,
             interactionOptions: InteractionOptions(
-              flags: _draggingIndex != null
+              flags:
+                  (_draggingIndex != null || _pendingMidIndex != null)
                   ? InteractiveFlag.none
                   : InteractiveFlag.all,
             ),
-            onTap: _draggingIndex != null
-                ? null
-                : (_, point) => notifier.addPoint(
-                    MapAreaPoint(
-                      latitude: point.latitude,
-                      longitude: point.longitude,
-                    ),
-                  ),
+            onTap: (_, point) {
+              if (_suppressNextTap) {
+                _suppressNextTap = false;
+                return;
+              }
+              if (_draggingIndex != null || _pendingMidIndex != null) return;
+              notifier.addPoint(
+                MapAreaPoint(
+                  latitude: point.latitude,
+                  longitude: point.longitude,
+                ),
+              );
+            },
             onPointerDown: (event, _) => _onPointerDown(event, points),
             onPointerMove: (event, latLng) => _onPointerMove(event, latLng),
             onPointerUp: (event, _) => _onPointerUp(event),
@@ -231,8 +270,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                 markers: List.generate(mids.length, (i) {
                   return Marker(
                     point: mids[i],
-                    width: 12,
-                    height: 12,
+                    width: 10,
+                    height: 10,
                     child: Container(
                       decoration: BoxDecoration(
                         color: colorScheme.primary.withAlpha(160),
@@ -249,8 +288,8 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                 final isDragging = _draggingIndex == i;
                 return Marker(
                   point: latlngs[i],
-                  width: isDragging ? 22 : 18,
-                  height: isDragging ? 22 : 18,
+                  width: isDragging ? 18 : 14,
+                  height: isDragging ? 18 : 14,
                   child: AnimatedContainer(
                     duration: Duration(milliseconds: isDragging ? 0 : 120),
                     decoration: BoxDecoration(
@@ -258,7 +297,7 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                           ? colorScheme.secondary
                           : colorScheme.primary,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2.5),
+                      border: Border.all(color: Colors.white, width: 2.0),
                       boxShadow: [
                         BoxShadow(
                           color:
