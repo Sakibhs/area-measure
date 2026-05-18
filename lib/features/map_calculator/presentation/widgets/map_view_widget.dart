@@ -21,6 +21,8 @@ class MapViewWidget extends ConsumerStatefulWidget {
 class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   final _mapController = MapController();
   int? _draggingIndex;
+  int? _draggingPointer;
+  final Set<int> _activePointers = {};
 
   static const _hitRadius = 30.0;
   static const _midHitRadius = 22.0;
@@ -49,6 +51,19 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
   }
 
   void _onPointerDown(PointerDownEvent event, List<MapAreaPoint> points) {
+    _activePointers.add(event.pointer);
+
+    // Multi-touch (pinch-zoom) — abort any active drag so the map can zoom.
+    if (_activePointers.length > 1) {
+      if (_draggingIndex != null) {
+        setState(() {
+          _draggingIndex = null;
+          _draggingPointer = null;
+        });
+      }
+      return;
+    }
+
     final camera = _mapController.camera;
     final latlngs = points.map((p) => LatLng(p.latitude, p.longitude)).toList();
 
@@ -56,7 +71,10 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
     for (int i = 0; i < latlngs.length; i++) {
       final screen = camera.latLngToScreenOffset(latlngs[i]);
       if ((screen - event.localPosition).distance < _hitRadius) {
-        setState(() => _draggingIndex = i);
+        setState(() {
+          _draggingIndex = i;
+          _draggingPointer = event.pointer;
+        });
         return;
       }
     }
@@ -75,14 +93,19 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                 longitude: mids[i].longitude,
               ),
             );
-        setState(() => _draggingIndex = i + 1);
+        setState(() {
+          _draggingIndex = i + 1;
+          _draggingPointer = event.pointer;
+        });
         return;
       }
     }
   }
 
-  void _onPointerMove(LatLng latLng) {
+  void _onPointerMove(PointerMoveEvent event, LatLng latLng) {
     if (_draggingIndex == null) return;
+    if (_draggingPointer != event.pointer) return;
+    if (_activePointers.length > 1) return;
     ref
         .read(mapCalculatorNotifierProvider.notifier)
         .movePoint(
@@ -91,8 +114,14 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
         );
   }
 
-  void _onPointerUp() {
-    if (_draggingIndex != null) setState(() => _draggingIndex = null);
+  void _onPointerUp(PointerEvent event) {
+    _activePointers.remove(event.pointer);
+    if (_draggingPointer == event.pointer && _draggingIndex != null) {
+      setState(() {
+        _draggingIndex = null;
+        _draggingPointer = null;
+      });
+    }
   }
 
   List<HistoryEntry> _savedMapEntries() {
@@ -153,9 +182,9 @@ class _MapViewWidgetState extends ConsumerState<MapViewWidget> {
                     ),
                   ),
             onPointerDown: (event, _) => _onPointerDown(event, points),
-            onPointerMove: (_, latLng) => _onPointerMove(latLng),
-            onPointerUp: (_, __) => _onPointerUp(),
-            onPointerCancel: (_, __) => _onPointerUp(),
+            onPointerMove: (event, latLng) => _onPointerMove(event, latLng),
+            onPointerUp: (event, _) => _onPointerUp(event),
+            onPointerCancel: (event, _) => _onPointerUp(event),
           ),
           children: [
             TileLayer(
