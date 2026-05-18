@@ -377,6 +377,12 @@ class AppLocalizationsBn extends AppLocalizations {
   String get loginToSyncText => 'অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন';
 
   @override
+  String get loginRequiredToSave => 'সংরক্ষণ করতে সাইন ইন করুন';
+
+  @override
+  String get signInCancelled => 'সাইন ইন বাতিল হয়েছে';
+
+  @override
   String get errorPlotNameRequired => 'জমির নাম লিখুন';
 
   @override

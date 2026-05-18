@@ -153,6 +153,8 @@
   "signOut": "Sign out",
   "signIn": "Sign In",
   "loginToSyncText": "Login to sync app data online",
+  "loginRequiredToSave": "Please sign in to save",
+  "signInCancelled": "Sign in cancelled",
   "errorPlotNameRequired": "Please enter plot name",
 
   "addMeasurement": "Add Measurement",

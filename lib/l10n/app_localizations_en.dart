@@ -377,6 +377,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginToSyncText => 'Login to sync app data online';
 
   @override
+  String get loginRequiredToSave => 'Please sign in to save';
+
+  @override
+  String get signInCancelled => 'Sign in cancelled';
+
+  @override
   String get errorPlotNameRequired => 'Please enter plot name';
 
   @override

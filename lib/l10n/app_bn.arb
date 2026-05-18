@@ -151,6 +151,8 @@
   "signOut": "সাইন আউট",
   "signIn": "সাইন ইন",
   "loginToSyncText": "অনলাইনে ডেটা সিঙ্ক করতে লগইন করুন",
+  "loginRequiredToSave": "সংরক্ষণ করতে সাইন ইন করুন",
+  "signInCancelled": "সাইন ইন বাতিল হয়েছে",
   "errorPlotNameRequired": "জমির নাম লিখুন",
 
   "addMeasurement": "পরিমাপ যোগ করুন",

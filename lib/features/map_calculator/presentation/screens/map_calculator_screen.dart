@@ -1,3 +1,4 @@
+import 'package:area_and_plot/features/auth/presentation/providers/auth_provider.dart';
 import 'package:area_and_plot/features/map_calculator/data/services/location_service.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_calculator_provider.dart';
 import 'package:area_and_plot/features/map_calculator/presentation/providers/map_camera_provider.dart';
@@ -33,6 +34,35 @@ class _MapCalculatorScreenState extends ConsumerState<MapCalculatorScreen> {
 
   void _moveTo(LatLng latLng) {
     _mapController.move(latLng, _myLocationZoom);
+  }
+
+  Future<void> _handleSaveTap({
+    required MeasureMode mode,
+    required double areaInSqFt,
+    required double distanceMeters,
+  }) async {
+    final signedIn = ref.read(authStateProvider).valueOrNull != null;
+    if (signedIn) {
+      _openSaveForm(context, mode, areaInSqFt, distanceMeters);
+      return;
+    }
+
+    await ref.read(authNotifierProvider.notifier).signIn();
+    if (!mounted) return;
+
+    final hadError = ref.read(authNotifierProvider).error != null;
+    if (hadError) {
+      final l = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l.loginRequiredToSave),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    _openSaveForm(context, mode, areaInSqFt, distanceMeters);
   }
 
   Future<void> _handleMapReady() async {
@@ -142,11 +172,10 @@ class _MapCalculatorScreenState extends ConsumerState<MapCalculatorScreen> {
                   FloatingActionButton.small(
                     heroTag: 'map_save_fab',
                     tooltip: l.save,
-                    onPressed: () => _openSaveForm(
-                      context,
-                      mode,
-                      state.areaInSqFt,
-                      notifier.totalDistanceMeters,
+                    onPressed: () => _handleSaveTap(
+                      mode: mode,
+                      areaInSqFt: state.areaInSqFt,
+                      distanceMeters: notifier.totalDistanceMeters,
                     ),
                     child: const Icon(Icons.save_outlined),
                   ),

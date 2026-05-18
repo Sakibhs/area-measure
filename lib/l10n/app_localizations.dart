@@ -818,6 +818,18 @@ abstract class AppLocalizations {
   /// **'Login to sync app data online'**
   String get loginToSyncText;
 
+  /// No description provided for @loginRequiredToSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign in to save'**
+  String get loginRequiredToSave;
+
+  /// No description provided for @signInCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in cancelled'**
+  String get signInCancelled;
+
   /// No description provided for @errorPlotNameRequired.
   ///
   /// In en, this message translates to:
